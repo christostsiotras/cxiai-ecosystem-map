@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ecosystem Infrastructure Map | CXI+AI</title>
+<style>
+@font-face{font-family:'Pfizer Tomorrow';src:url('https://docs.gcs.digitalpfizer.com/fonts/pfizer_tomorrow/PfizerTomorrow-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Pfizer Tomorrow';src:url('https://docs.gcs.digitalpfizer.com/fonts/pfizer_tomorrow/PfizerTomorrow-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Pfizer Diatype';src:url('https://docs.gcs.digitalpfizer.com/fonts/pfizer_diatype/PfizerDiatypePlusVariable.woff2') format('woff2');font-weight:100 900;font-display:swap}
+:root{
+--blue:#0000C9;--navy:#000067;--white:#FFFFFF;--bright:#0095FF;--ice:#AEE3FF;--sky:#68D1FF;--teal:#00B7A5;--lav:#A68AFF;
+--pale:#E8F2FF;--fill:#EEF5FB;--lgray:#E0E0E0;--mgray:#767676;--dgray:#1A1A1A;
+--fh:'Pfizer Tomorrow','Franklin Gothic Medium',Arial,sans-serif;
+--fb:'Pfizer Diatype','Helvetica Neue',Arial,sans-serif;
+--own:#00B7A5;--exp:#0095FF;--shr:#68D1FF;--con:#A68AFF;--use:#9A9AAE;--unk:#C9C9D4;
+--r:12px;--rs:8px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--fb);color:var(--navy);background:var(--white);font-size:15px;line-height:1.5;display:flex;flex-direction:column;overflow:hidden}
+h1,h2,h3,h4{font-family:var(--fh);letter-spacing:-0.015em;font-weight:700}
+button{font-family:var(--fb)}
+
+/* ---------- Header ---------- */
+header.top{flex:none;background:var(--white);border-bottom:1px solid var(--lgray);padding:0 20px}
+header.top .row{display:flex;align-items:center;gap:16px;height:60px}
+.logo{height:30px;width:74px;flex:none}
+.ttl{font-family:var(--fh);font-size:16px;color:var(--navy);line-height:1.2}
+.ttl small{display:block;font-family:var(--fb);font-weight:400;font-size:12px;color:var(--mgray);letter-spacing:0}
+.draft{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--white);background:var(--blue);border-radius:999px;padding:4px 11px;flex:none}
+.spacer{flex:1}
+
+/* ---------- Toolbar ---------- */
+.bar{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px 20px;border-bottom:1px solid var(--lgray);background:var(--fill)}
+.seg{display:inline-flex;background:var(--white);border:1px solid var(--navy);border-radius:999px;padding:3px}
+.seg button{font-size:13.5px;font-weight:500;border:0;background:transparent;color:var(--navy);padding:7px 16px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--white)}
+.zoomctl{display:inline-flex;gap:6px}
+.zbtn{width:34px;height:34px;border-radius:999px;border:1px solid var(--navy);background:var(--white);color:var(--navy);font-size:17px;cursor:pointer;line-height:1}
+.zbtn.wide{width:auto;padding:0 14px;font-size:13px}
+.zbtn:hover{background:var(--navy);color:var(--white)}
+.lvl{font-size:12px;color:var(--mgray);min-width:104px}
+.lgd{display:flex;flex-wrap:wrap;gap:4px}
+.lgd .ti{position:relative;display:inline-flex}
+.lgd .tt{position:absolute;left:0;top:calc(100% + 9px);width:248px;background:var(--white);border:1px solid var(--navy);border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.45;color:var(--dgray);z-index:30;opacity:0;visibility:hidden;transition:opacity .14s;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,103,.10)}
+.lgd .tt b{display:block;font-family:var(--fh);font-size:13px;color:var(--navy);margin-bottom:3px}
+.lgd .ti:hover .tt,.lgd .ti:focus-within .tt{opacity:1;visibility:visible}
+.lgd button{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;border:1px solid var(--lgray);background:var(--white);color:var(--navy);border-radius:999px;padding:4px 11px 4px 7px;cursor:pointer}
+.lgd .ti.excluded button{opacity:.35}
+.lgd .ti.iso button{border-color:var(--blue);background:var(--pale);font-weight:600}
+.dot{width:11px;height:11px;border-radius:3px;flex:none}
+
+/* ---------- Stage ---------- */
+.stage{flex:1;position:relative;overflow:hidden;background:var(--white);min-height:0}
+#svg{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+#svg.drag{cursor:grabbing}
+.hint{position:absolute;left:20px;bottom:16px;font-size:12px;color:var(--mgray);background:rgba(255,255,255,.9);border:1px solid var(--lgray);border-radius:999px;padding:6px 14px;pointer-events:none}
+
+/* ---------- SVG styling ---------- */
+.terr{fill:var(--fill);stroke:var(--ice);stroke-width:1.5}
+.terr.band{fill:#F7FAFD}
+.terr.hot{fill:var(--pale);stroke:var(--bright);cursor:pointer}
+.tname{font-family:var(--fh);font-weight:700;fill:var(--navy)}
+.tsub{fill:var(--mgray)}
+.tbig{font-family:var(--fh);font-weight:700;fill:var(--navy);font-size:52px}
+.tbiglbl{fill:var(--mgray);font-size:15px}
+.chip rect.bg{fill:var(--white);stroke:var(--lgray);stroke-width:1.2}
+.chip{cursor:pointer}
+.chip:hover rect.bg{stroke:var(--blue);stroke-width:2}
+.chip.sel rect.bg{stroke:var(--blue);stroke-width:2.5}
+.chip.dim{opacity:.16}
+.chip text.n{font-family:var(--fh);font-weight:700;font-size:14px;fill:var(--navy)}
+.chip text.d{font-size:11.5px;fill:var(--mgray)}
+.chip rect.ob{rx:2}
+.cf-inferred rect.bg{stroke-dasharray:5 3}
+.cf-unknown rect.bg{stroke-dasharray:2 3;stroke:var(--unk)}
+.cf-unknown text.n{fill:var(--mgray)}
+/* --- level of detail: this is what makes the zoom mean anything --- */
+#svg .lod-far,#svg .lod-mid,#svg .lod-near,#svg .eg{transition:opacity .18s}
+/* Map view drops the lines entirely now that the Atlas draws them as roads.
+   The integration data still powers selection and the detail panel, this
+   just stops it from being drawn on this canvas. */
+#svg .eg{display:none}
+#svg[data-lod="far"] .lod-mid,#svg[data-lod="far"] .lod-near,#svg[data-lod="far"] .eg{opacity:0;pointer-events:none}
+#svg[data-lod="mid"] .lod-far,#svg[data-lod="mid"] .lod-near{opacity:0;pointer-events:none}
+#svg[data-lod="near"] .lod-far{opacity:0;pointer-events:none}
+/* when a component is selected, everything unrelated recedes */
+#svg.focus .eg{opacity:.05;pointer-events:none}
+#svg.focus .eg.on{opacity:1}
+#svg[data-lod="far"].focus .eg.on{opacity:0}
+/* both endpoints must be enabled in the ownership filter for an arrow to show */
+#svg .eg.off{opacity:0 !important;pointer-events:none}
+
+/* at 45% the layer labels need to be bigger to stay readable */
+#svg[data-lod="far"] .tname{font-size:25px}
+#svg[data-lod="far"] .tsub{font-size:16px}
+
+.edge{stroke:var(--navy);stroke-width:1.5;fill:none;opacity:.22;marker-end:url(#ah)}
+.edge.inf{stroke-dasharray:5 4;opacity:.16}
+.eg.on .edge{stroke:var(--blue);stroke-width:2.6;opacity:1;marker-end:url(#ahb)}
+.elbl{font-size:11px;fill:var(--blue);font-weight:600;opacity:0;paint-order:stroke;stroke:var(--white);stroke-width:4;stroke-linejoin:round}
+.eg.on .elbl{opacity:1}
+.flow{stroke:var(--ice);stroke-width:14;fill:none;stroke-linecap:round}
+.empty{fill:none;stroke:var(--lav);stroke-width:2;stroke-dasharray:7 5}
+.emptxt{fill:var(--lav);font-size:13px;font-family:var(--fh);font-weight:700}
+
+/* ---------- Panel ---------- */
+.panel{position:absolute;top:0;right:0;bottom:0;width:390px;max-width:92vw;background:var(--white);border-left:1px solid var(--lgray);overflow-y:auto;transform:translateX(100%);transition:transform .22s;z-index:8}
+.panel.open{transform:none}
+.panel .ph{position:sticky;top:0;background:var(--white);border-bottom:1px solid var(--lgray);padding:18px 22px;display:flex;align-items:flex-start;gap:12px}
+.panel h3{font-size:20px;line-height:1.2;color:var(--navy);flex:1}
+.panel .close{border:0;background:transparent;font-size:24px;color:var(--mgray);cursor:pointer;line-height:1}
+.pb{padding:20px 22px 40px}
+.kv{display:grid;grid-template-columns:118px 1fr;gap:7px 12px;font-size:13.5px;margin-bottom:18px}
+.kv dt{color:var(--mgray)}
+.kv dd{color:var(--navy)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;border-radius:999px;padding:3px 10px;background:var(--fill);color:var(--navy)}
+.pb h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--mgray);margin:20px 0 9px;font-weight:700;font-family:var(--fb)}
+.pb p{font-size:14px;color:var(--dgray);margin-bottom:10px}
+.lnk{list-style:none;display:flex;flex-direction:column;gap:7px}
+.lnk li{font-size:13.5px;border:1px solid var(--lgray);border-radius:var(--rs);padding:9px 12px;cursor:pointer}
+.lnk li:hover{border-color:var(--blue)}
+.lnk li b{font-family:var(--fh);font-size:13.5px}
+.lnk li em{font-style:normal;color:var(--mgray);font-size:12px;display:block;margin-top:2px}
+.none{font-size:13.5px;color:var(--lav);border:1px dashed var(--lav);border-radius:var(--rs);padding:10px 12px}
+.src{font-size:12px;color:var(--mgray);border-top:1px solid var(--lgray);padding-top:12px;margin-top:20px}
+
+/* ---------- Board view ---------- */
+.board{flex:1;overflow:auto;padding:22px;display:none;background:var(--white)}
+.board.on{display:block}
+.btbl{width:100%;border-collapse:separate;border-spacing:8px;min-width:940px}
+.btbl th{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--mgray);text-align:left;vertical-align:bottom;padding:0 6px 4px;font-weight:700}
+.btbl th.rh{width:186px}
+.btbl td{background:var(--fill);border-radius:var(--rs);padding:9px;vertical-align:top;min-width:130px}
+.btbl td.z{background:repeating-linear-gradient(135deg,#FAFAFC,#FAFAFC 7px,#F2F2F6 7px,#F2F2F6 14px)}
+.btbl th.row{font-family:var(--fh);font-size:14px;color:var(--navy);text-align:left;vertical-align:middle;text-transform:none;letter-spacing:0;padding-right:10px}
+.bc{display:block;width:100%;text-align:left;background:var(--white);border:1px solid var(--lgray);border-radius:6px;padding:6px 9px;font-size:12.5px;color:var(--navy);margin-bottom:5px;cursor:pointer}
+.bc:last-child{margin-bottom:0}
+.bc:hover{border-color:var(--blue)}
+.bc.inferred{border-style:dashed}
+.bc.unknown{border-style:dotted;color:var(--mgray)}
+.bhd{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+
+/* foundation band: the consumed services everything above sits on */
+.found{margin-top:26px;border:1px solid var(--lgray);border-top:4px solid var(--use);border-radius:var(--r);background:var(--fill);padding:16px 18px}
+.found .fhd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.found .fhd strong{font-family:var(--fh);font-size:15px;color:var(--navy)}
+.found .fhd span{font-size:12.5px;color:var(--mgray)}
+.found .frow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
+.fgrp{flex:1 1 168px;min-width:150px;background:var(--white);border:1px solid var(--lgray);border-radius:var(--rs);padding:9px 10px}
+.fgrp h5{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--mgray);margin-bottom:7px;font-weight:700}
+
+/* ---------- Gaps ---------- */
+.gaps{position:absolute;left:0;right:0;bottom:0;max-height:72%;background:var(--white);border-top:2px solid var(--navy);overflow-y:auto;transform:translateY(100%);transition:transform .24s;z-index:9}
+.gaps.open{transform:none}
+.gh{position:sticky;top:0;background:var(--navy);color:var(--white);padding:14px 22px;display:flex;align-items:center;gap:14px}
+.gh h3{font-size:18px;color:var(--white);flex:1}
+.gh .close{border:0;background:transparent;color:var(--white);font-size:24px;cursor:pointer;line-height:1}
+.gb{padding:20px 22px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px}
+.gcard{border:1px solid var(--lgray);border-radius:var(--r);padding:18px;background:var(--white)}
+.gcard .tag{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;border-radius:999px;padding:3px 10px;margin-bottom:10px;color:var(--white)}
+.t-cap{background:var(--lav)}.t-ovl{background:var(--bright)}.t-orp{background:var(--teal)}.t-evd{background:var(--mgray)}.t-own{background:var(--blue)}
+.gcard h4{font-size:16px;color:var(--navy);margin-bottom:7px;line-height:1.3}
+.gcard p{font-size:13.5px;color:var(--dgray)}
+.gcard ul{margin:9px 0 0 17px;font-size:13px;color:var(--navy)}
+.gnote{grid-column:1/-1;font-size:13px;color:var(--mgray);border-top:1px solid var(--lgray);padding-top:14px}
+
+/* ---------- Atlas view: molecular treatment on the CXI+AI dark palette ---------- */
+.stage[hidden]{display:none}
+#svg2{width:100%;height:100%;display:block;cursor:grab;touch-action:none;background:#05061C}
+#svg2.drag{cursor:grabbing}
+
+/* clusters read as molecules: a soft nucleus, an electron shell, an outer halo */
+.shell{fill:none;stroke:#3C5A8C;stroke-width:1.6;stroke-dasharray:2 9;stroke-linecap:round;opacity:.65;cursor:pointer}
+.shell2{fill:none;stroke:#263A63;stroke-width:1;stroke-dasharray:1 14;opacity:.5;pointer-events:none}
+.nucleus{cursor:pointer}
+.nucleus:hover ~ .shell,.shell:hover{stroke:var(--sky);opacity:1}
+.cname{font-family:var(--fh);font-weight:700;fill:#EAF4FF;text-anchor:middle;pointer-events:none;letter-spacing:.01em}
+.ccount{fill:#7E9CC4;text-anchor:middle;pointer-events:none;letter-spacing:.06em}
+
+/* bonds */
+.road{fill:none;stroke:#4E6E9E;stroke-width:1.6;opacity:.45;stroke-linecap:round}
+.road.inf{stroke-dasharray:5 6;opacity:.28}
+.road.far{stroke:#4FA8E8;opacity:.5;stroke-width:1.8}
+.bondcore{fill:none;stroke:#8FD4FF;stroke-width:.6;opacity:.35}
+.rg.on .road{stroke:var(--sky);opacity:1;stroke-width:3}
+.rg.on .bondcore{stroke:#FFFFFF;opacity:.9;stroke-width:1}
+.rlbl{font-size:11px;fill:#BFE6FF;font-weight:600;text-anchor:middle;opacity:0;paint-order:stroke;stroke:#05061C;stroke-width:4;stroke-linejoin:round;letter-spacing:.02em}
+.rg.on .rlbl{opacity:1}
+.rg.off{opacity:0 !important;pointer-events:none}
+
+/* atoms */
+.city{cursor:pointer}
+.city circle.halo{opacity:.20}
+.city circle.pin{stroke:#05061C;stroke-width:1.5}
+.city circle.spec{fill:#FFFFFF;opacity:.5;pointer-events:none}
+.city:hover circle.halo{opacity:.42}
+.city.sel circle.pin{stroke:#FFFFFF;stroke-width:2.5}
+.city.sel circle.halo{opacity:.6}
+.city circle.oring{fill:none;stroke:var(--lav);stroke-width:1.4;stroke-dasharray:2 4;opacity:.85}
+.city text{font-size:12.5px;fill:#DCEBFF;text-anchor:middle;paint-order:stroke;stroke:#05061C;stroke-width:4;stroke-linejoin:round;letter-spacing:.01em}
+.city.dim{opacity:.10}
+.road.dim{opacity:.04}
+
+#svg2[data-lod="far"] .g-mid,#svg2[data-lod="far"] .g-near{opacity:0;pointer-events:none}
+#svg2[data-lod="mid"] .g-far,#svg2[data-lod="mid"] .g-near{opacity:0;pointer-events:none}
+#svg2[data-lod="near"] .g-far{opacity:0;pointer-events:none}
+#svg2.focus .rg{opacity:.05}
+#svg2.focus .rg.on{opacity:1}
+#svg2.orph .city:not(.isorph){opacity:.08}
+#svg2.orph .rg{opacity:.04}
+#gorph[aria-pressed="true"]{background:var(--navy);color:var(--white)}
+body:not(.globeview) #gorph{display:none}
+body.globeview #lgd,body.globeview .zoomctl,body.globeview #lvl{display:flex}
+
+/* panels float above whichever view is showing */
+.panel{position:fixed}
+.gaps{position:fixed}
+
+/* board view has no zoom, no gaps panel and no filter, so the map toolbar goes away */
+body.boardview .bar{display:none}
+
+@media (max-width:820px){
+.bar{gap:8px 10px;padding:8px 12px}
+.lgd{width:100%}
+.panel{width:100%}
+.hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="pfz" viewBox="0 0 756 307">
+<path d="M739.975 136.411C729.945 136.411 719.26 142.866 710.894 156.227L715.783 137.862H687.76L664.828 222.181H692.851L703.233 184.25C707.416 168.738 717.597 153.575 724.351 153.575C731.608 153.575 728.887 167.136 741.436 167.136C750.508 167.136 756.002 158.829 756.002 151.223C755.951 142.366 748.895 136.411 739.975 136.411Z" fill="#0000C9"/>
+<path d="M631.361 209.521C617.35 209.721 609.891 200.864 609.891 185.151C609.891 184.101 609.941 183.1 609.992 182.099H665.028C666.137 177.945 666.843 173.442 666.843 169.288C666.843 150.123 654.999 135.511 630.807 135.511C606.615 135.511 584.086 159.731 584.086 185.151C584.086 210.572 600.113 224.333 626.825 224.333C638.669 224.333 650.312 220.38 658.476 214.225L653.386 201.565C647.036 206.469 639.224 209.371 631.361 209.521ZM631.21 149.222C639.375 149.222 643.558 154.476 643.558 166.036C643.558 167.137 643.508 168.288 643.356 169.489H611.957C615.384 157.279 622.692 149.222 631.21 149.222Z" fill="#0000C9"/>
+<path d="M593.007 137.863H518.818L515.139 151.774H551.074L495.332 222.181H573.906L577.534 208.27H537.114L593.007 137.863Z" fill="#0000C9"/>
+<path d="M451.181 137.862L454.407 126.103C456.02 119.948 458.792 109.489 462.572 97.3791C466.553 84.919 473.861 77.1626 483.689 77.1626C488.427 77.1626 491.35 79.3144 491.35 82.9173C491.149 86.8706 487.873 89.2225 487.873 95.5777C487.873 102.984 494.223 108.738 502.438 108.738C512.619 108.738 520.784 100.632 520.784 90.6737C520.784 75.3111 507.529 65.2029 487.318 65.2029C457.683 65.2029 438.229 83.9682 426.032 127.854L376.539 306.45H404.561L447.301 151.673H476.432L457.28 222.081H485.302L508.234 137.762H451.181V137.862Z" fill="#0000C9"/>
+<path d="M413.481 130.106C413.481 110.24 397.857 95.7781 374.169 95.7781H328.356L293.781 222.181H322.711L335.462 175.593H360.561C389.289 175.593 413.481 157.178 413.481 130.106ZM349.473 160.781H339.544L353.253 110.59H363.686C376.84 110.59 384.249 119.447 384.249 131.157C384.199 149.922 369.381 160.781 349.473 160.781Z" fill="#0000C9"/>
+<path d="M1.96484 165.736C2.31764 164.735 2.67044 163.785 3.17444 162.834C15.0688 138.964 65.9224 129.106 138.801 137.864L153.467 84.3198C78.472 74.8621 23.7376 85.5208 14.6152 119.398L1.96484 165.736Z" fill="#0095FF"/>
+<path d="M275.639 109.991C275.337 110.791 275.034 111.592 274.682 112.393C263.291 136.613 212.236 146.621 138.803 137.814L124.137 191.357C199.132 200.815 253.866 190.156 262.989 156.279L275.639 109.991Z" fill="#0000C9"/>
+<path d="M49.9453 53.5437C160.624 61.4501 273.671 115.794 262.986 156.378L272.915 120.148C276.09 108.739 277.653 102.834 277.653 98.08C277.653 56.7463 168.537 6.30514 64.6117 0L49.9453 53.5437Z" fill="#0095FF"/>
+<path d="M227.657 222.132C116.978 214.275 3.9312 159.931 14.6664 119.348L4.7376 155.577C1.5624 166.987 0 172.892 0 177.645C0 218.979 109.116 269.42 213.041 275.725L227.657 222.132Z" fill="#0000C9"/>
+</symbol>
+</svg>
+
+<header class="top">
+  <div class="row">
+    <svg class="logo" aria-label="Pfizer" role="img"><use href="#pfz"/></svg>
+    <div class="ttl">Ecosystem Infrastructure Map<small>CXI+AI / OSS&amp;AI &middot; ownership, flow and gaps</small></div>
+    <span class="draft">V1.0</span>
+    <div class="spacer"></div>
+    <div class="seg" role="group" aria-label="View">
+      <button type="button" data-view="map" aria-pressed="true">Map</button>
+      <button type="button" data-view="globe" aria-pressed="false">Atlas</button>
+      <button type="button" data-view="board" aria-pressed="false">Estate board</button>
+    </div>
+  </div>
+</header>
+
+<div class="bar">
+  <div class="zoomctl">
+    <button class="zbtn" id="zout" type="button" aria-label="Zoom out">&minus;</button>
+    <button class="zbtn" id="zin" type="button" aria-label="Zoom in">+</button>
+    <button class="zbtn wide" id="zfit" type="button">Whole estate</button>
+  </div>
+  <span class="lvl" id="lvl"></span>
+  <div class="lgd" id="lgd"></div>
+  <div class="spacer"></div>
+  <button class="zbtn wide" id="gorph" type="button" aria-pressed="false">Isolate orphans</button>
+  <button class="zbtn wide" id="gapsBtn" type="button">Gaps identified</button>
+</div>
+
+<div class="stage" id="stage">
+  <svg id="svg" role="application" aria-label="Interactive infrastructure map"></svg>
+  <div class="hint">Scroll to zoom &middot; drag to pan &middot; click a layer to dive in</div>
+</div>
+
+<div class="stage" id="stage2" hidden>
+  <svg id="svg2" role="application" aria-label="Atlas view of the ecosystem"></svg>
+  <div class="hint">Clusters are layers &middot; atoms are components, sized by what depends on them &middot; bonds are integrations</div>
+</div>
+
+<div class="board" id="board"></div>
+<aside class="panel" id="panel" aria-live="polite"></aside>
+<section class="gaps" id="gaps"></section>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   REGISTER  — every node carries source + confidence.
+   confidence: "confirmed" (evidence found) | "inferred" | "unknown"
+   ownership : own | experience | shared | contested | consume | unknown
+   ============================================================ */
+
+var OWN = {
+  own:       {label:"Own & operate",      c:"var(--own)", desc:"OSS builds it and runs it."},
+  experience:{label:"Own the experience", c:"var(--exp)", desc:"We own what ships on it, not the platform."},
+  shared:    {label:"Shared operation",   c:"var(--shr)", desc:"Genuine joint run, defined split."},
+  contested: {label:"Contested",          c:"var(--con)", desc:"Live ownership discussion, position stated on both sides."},
+  consume:   {label:"Consume",            c:"var(--use)", desc:"We integrate, someone else runs it."}
+};
+
+var LAYERS = [
+  {id:"manage",  t:"Manage & Plan",         s:"Work intake, briefs, campaign planning", kind:"stage", col:0},
+  {id:"assets",  t:"Assets & Media",        s:"Approved images, documents, video",      kind:"stage", col:1},
+  {id:"author",  t:"Author & Assemble",     s:"Where pages and content are built",      kind:"stage", col:2},
+  {id:"deliver", t:"Host, Deliver, Integrate", s:"Runtime, edge, APIs",                 kind:"stage", col:3},
+  {id:"engage",  t:"Experience & Engagement", s:"The surfaces audiences actually see",  kind:"stage", col:4},
+  {id:"measure", t:"Measure",               s:"Analytics feeding back into planning",   kind:"stage", col:5},
+
+  {id:"review",  t:"Review & Approval",     s:"MLR sign-off. A round trip, not a step in the line.", kind:"band"},
+  {id:"design",  t:"Design Systems",        s:"Component libraries the experience layer renders from", kind:"band"},
+  {id:"identity",t:"Identity & Access",     s:"Who the visitor is, and what they may see", kind:"band"},
+  {id:"provision",t:"Provisioning & Governance", s:"How sites, stacks and access get created", kind:"band"},
+  {id:"infra",   t:"Infrastructure",        s:"Compute, edge, DNS, source control",     kind:"band"},
+  {id:"mcp",     t:"Agentic / MCP Surface", s:"What is reachable by an agent today",    kind:"band"}
+];
+
+var C = [
+ /* ---- MANAGE ---- */
+ {id:"workfront", n:"Workfront", l:"manage", o:"consume", op:"Adobe (vendor)", cf:"confirmed",
+  d:"Work and project management for content requests and delivery.",
+  src:"MCP Application Register, Confluence IS space. Listed vendor, likely Adobe connector adopt."},
+ {id:"eshub", n:"Engineering Services Hub", l:"manage", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Front door for OSS engineering requests. Team directory and request form.",
+  src:"Confluence: CX+AI Eng Team Getting Started, external links to engineering.captain.digitalpfizer.com."},
+ {id:"amp", n:"AMP", l:"manage", o:"own", op:"Syed Ali's team (OSS)", cf:"confirmed",
+  d:"In-house AI platform over the marketing content workflow. Reads only Pfizer-controlled storage; connects out to Adobe Workfront and Lexicon.",
+  src:"Confluence AMPM space: AMP Data Sources, Onboarding to the AMP team. Jira AMPM-1717 on Workfront event ingestion for AMP's own notification engine. Operator lead (unconfirmed): Syed Ali's team. Reclassified on Luca's feedback, 25 Sep.",
+  note:"Not Accelerated Mobile Pages. AMP here is a Pfizer-built AI platform with its own space, team and Jira project. It also connects to Lexicon, which is not yet on this map. Our integration point to it, if any, is still unestablished."},
+
+ /* ---- ASSETS ---- */
+ {id:"adobedam", n:"Adobe DAM", l:"assets", o:"shared", op:"Adobe (vendor)", cf:"inferred",
+  d:"Digital asset repository. Approved images, documents and brand files.",
+  src:"Luca's spec. Appears as AEM Assets in the Content Platform Architecture asset layer. Luca 25 Sep: shared, possibly own and operate. To confirm with Syed."},
+ {id:"veeva", n:"Veeva Vault", l:"assets", o:"shared", op:"Veeva (vendor)", cf:"confirmed",
+  d:"Regulated content and asset store. Also the source for PromoMats review.",
+  src:"MCP Application Register (vendor, adopt or wrap). Asset layer of the architecture. Luca 25 Sep: shared, possibly own and operate. To confirm with Syed."},
+ {id:"webfiles", n:"Webfiles", l:"assets", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Internal file store serving web properties.",
+  src:"MCP Application Register lists Web Files as internal. Listed in the OSS Toolkit documentation. Part of the OSS Toolkit (spaces.pfizer/stratus-v2/projects/oss-internal/applications/oss-toolkit), hosted at oss-webkit.digitalpfizer.com. Confirmed by Christos 25 Sep."},
+ {id:"video", n:"Video Manager", l:"assets", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Video upload, metadata, permissions and expiry. Pushes files to the streaming platform.",
+  src:"Confluence OCT and VID spaces: admin functions, API endpoints, E2E test overview, general information. Part of the OSS Toolkit (spaces.pfizer/stratus-v2/projects/oss-internal/applications/oss-toolkit), hosted at oss-webkit.digitalpfizer.com. Confirmed by Christos 25 Sep.",
+  note:"Luca's spec calls this Video. It is Video Manager, and it is ours, not an unidentified content component."},
+ {id:"brightcove", n:"Brightcove", l:"assets", o:"own", op:"OSS (team to confirm)", cf:"confirmed",
+  d:"Video streaming and encoding platform behind Video Manager.",
+  src:"Confluence: Video Uploading (files pass from Video Manager to the streaming platform); OSS support route covers Brightcove and Video Manager issues together. Reclassified on Luca's feedback, 25 Sep."},
+ {id:"intman", n:"Interactive Manager", l:"assets", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Interactive content assembly and management.",
+  src:"Luca's spec and the MCP Application Register (internal). cxi-ai.pfizer.com states interactive calculators and estimators are typically embedded within PfizerPro, which gives this component a delivery target. Part of the OSS Toolkit (spaces.pfizer/stratus-v2/projects/oss-internal/applications/oss-toolkit), hosted at oss-webkit.digitalpfizer.com. Confirmed by Christos 25 Sep."},
+
+ /* ---- AUTHOR ---- */
+ {id:"franklin", n:"Adobe Franklin", l:"author", o:"contested", op:"Operational ownership in transition", cf:"confirmed",
+  d:"Document-authored CMS with Edge Delivery. Authors publish from a Word document.",
+  src:"Luca's spec names it contested. Confluence: Adobe Franklin (EBGS), Franklin Blocks (FRA). OSS Engineering lists three Adobe Franklin SMEs (Naresh, Juan, Vaibhav), scoped to budget assessment, vendor training and performance reports rather than operations.",
+  note:"Coupled model only. The Content Platform Architecture lists it interchangeably with AEM Sites and Drupal as an example, not as a characterisation. It also lists Adobe Edge Delivery separately in its delivery row, but Franklin IS Edge Delivery Services; its own options matrix says so. Nothing at Pfizer refers to Edge Delivery as a distinct system, so it is not a separate component here."},
+ {id:"webbuilder", n:"Web Builder", l:"author", o:"contested", op:"Operational ownership in transition", cf:"confirmed",
+  d:"Canvas-based site builder. Deploys into Edison Lite.",
+  src:"Luca's spec names it contested. Confluence: Web Builder Documentation (FRA), test scope pages. OSS Engineering holds a named Web Builder SME (Juan), currently working on Nanosites.",
+  note:"The architecture writes Edison Lite Web Builder as a single unit. Splitting authoring from hosting is our argument, not a documented position."},
+ {id:"vev", n:"Vev", l:"author", o:"own", op:"OSS (team to confirm)", cf:"confirmed",
+  d:"Visual web design and build tool used for campaign pages.",
+  src:"Confluence: Vev integration page (MCY space) with named vendor contacts. Reclassified on Luca's feedback, 25 Sep."},
+ {id:"pfizerweb", n:"PfizerWeb", l:"author", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Turns a brief into a finished site design from approved components, exported to the build platform.",
+  src:"cxi-ai.pfizer.com: AI Studio project, 198 components onboarded, MVP live with real Pfizer sites running through it.",
+  note:"The only owned capability in the authoring layer. It enforces the design system rather than adding another authoring route, so it strengthens rather than worsens the overlap gap."},
+ {id:"webformbuilder", n:"Webform Builder", l:"author", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Drag-and-drop form builder. Vue.js and Laravel, forms embedded into sites.",
+  src:"Confluence: Webform Builder Architecture (WBU) and Service Page. Hosted on Stratus, AWS stack, webforms.pfizer. Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."},
+
+ /* ---- DELIVER ---- */
+ {id:"edisonlite", n:"Edison Lite", l:"deliver", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Hosting for content-led sites. Canvas and NPM framework routes.",
+  src:"Confluence: Edison Home (EDN), Edison Lite site types in DMP (DMSP).",
+  note:"Ownership is clean. What is contested is the seam with Web Builder, not this platform."},
+ {id:"edisoncustom", n:"Edison Custom", l:"deliver", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Decoupled Drupal 9 hosting on AWS for larger custom sites.",
+  src:"Confluence: Platform Comparison (IU space), NextGen PMI launch procedure. OSS Engineering holds the Edison Custom SME doing feature development and maintenance (Reda), but building features on a platform is not operating it. Classified as consume: Digital runs it, we build on it. Luca 25 Sep."},
+ {id:"edisonlegacy", n:"Edison Legacy", l:"deliver", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed", st:"legacy",
+  d:"Drupal 7 on Acquia. Legacy estate, migration target.",
+  src:"Confluence: NextGen PMI Launch Procedure lists the three Edison instance types."},
+ {id:"sparkpro", n:"Spark Pro", l:"deliver", o:"consume", op:"Stratus platform team", cf:"confirmed",
+  d:"Application platform. Templated stacks, builds, per-branch previews, SSO, deploy to Cloudflare Workers.",
+  src:"Spark Pro architecture doc. Confluence: SOP for Stratus Hub Platform Access, CX+AI Eng onboarding.",
+  note:"Formerly Stratus Hub / FitKit. Ownership is not ambiguous: the Stratus team runs it, we consume it. Appears only in the headless model."},
+ {id:"pfisr", n:"Pfi.SR", l:"engage", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Short URL service. Redirects to content elsewhere; hosts nothing itself. Multi-domain, group-managed links, V-Card content types.",
+  src:"Confluence LPS space: multi-domain FRD v1.0, groups feature enablement, S3 backup process. Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."},
+
+ /* ---- ENGAGE ---- */
+ {id:"pfa", n:"PfizerForAll", l:"engage", o:"experience", op:"Pfizer (owner TBC)", cf:"confirmed",
+  d:"Consumer-facing destination. Runs on Edison Lite.",
+  src:"Confluence: PfizerForAll - Edison Lite (PSO space), go-live Aug 2024, and PfizerForAll - Adobe Franklin (PSO space).",
+  note:"Runs on two platforms at once. pfizerforallcom sits on Edison Lite, pfizerforallcomus on Adobe Franklin, with separate Edison Dashboard entries. The same brand spans both sides of the coupled/headless split."},
+ {id:"pfizerpro", n:"PfizerPro", l:"engage", o:"experience", op:"Pfizer (owner TBC)", cf:"inferred",
+  d:"HCP-facing portal.",
+  src:"Luca's spec. Named as a served surface in the architecture and in the MCP UI POC page."},
+ {id:"brandcom", n:"Brand.com", l:"engage", o:"experience", op:"Pfizer (owner TBC)", cf:"inferred",
+  d:"Brand website estate.",
+  src:"Luca's spec and the served-surfaces caption in the architecture."},
+ {id:"vaxassist", n:"Vaxassist", l:"engage", o:"shared", op:"Pfizer (platform TBC)", cf:"confirmed",
+  d:"Vaccination support surface. We own what ships on it.",
+  src:"Luca's spec email. Confirmed by Christos 25 Sep. Reclassified on Luca's feedback, 25 Sep."},
+ {id:"socialportal", n:"Social Media Portal", l:"engage", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Social channel publishing and management surface.",
+  src:"Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."},
+ {id:"eventsmgr", n:"Events Manager", l:"engage", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Event and webinar management surface.",
+  src:"Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."},
+
+ /* ---- MEASURE ---- */
+ {id:"adobeanalytics", n:"Adobe Analytics", l:"measure", o:"own", op:"OSS (team to confirm)", cf:"confirmed",
+  d:"Web analytics and reporting across the property estate.",
+  src:"Confluence: Adobe Analytics Dashboard (APCRRC space). Reclassified on Luca's feedback, 25 Sep."},
+ {id:"websdk", n:"Adobe WebSDK", l:"measure", o:"own", op:"OSS (team to confirm)", cf:"confirmed",
+  d:"Client-side collection layer feeding Adobe Analytics.",
+  src:"Confluence: Adobe WebSDK Implementation Guidelines (DAS space). Reclassified on Luca's feedback, 25 Sep."},
+
+ /* ---- REVIEW ---- */
+ {id:"smartcapture", n:"SmartCapture", l:"review", o:"consume", op:"Not established", cf:"confirmed",
+  d:"Pfizer's site capture service. Records page state to evidence and support MLR review.",
+  src:"Confluence OAP space: Adobe Franklin Requirements states all Franklin sites must be compatible and integrated with SmartCapture as the standard to aid MLR reviews and record keeping. Adobe Franklin Integration notes Franklin must trigger it on publish via Sidekick."},
+ {id:"promomats", n:"GCMA (Veeva PromoMats)", l:"review", o:"shared", op:"Josh Levy, product manager", cf:"confirmed",
+  d:"Medical, legal and regulatory review and approval. Nothing goes out unapproved.",
+  src:"Content Platform Architecture, review and approval node. GCMA is the Pfizer name for Veeva PromoMats; Josh Levy is the product manager. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, possibly own and operate. To confirm with Syed.",
+  note:"The Content Platform Architecture lists GCMA and Veeva PromoMats as two separate systems in the review node. They are one system under two names, so there is a single review route here, not a choice of two."},
+
+ /* ---- DESIGN ---- */
+ {id:"forge", n:"Forge", l:"design", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Design system. Reference implementation for the MCP design descriptor work.",
+  src:"MCP Builder Platform page, R&R table. Owner named."},
+ {id:"zenith", n:"Zenith", l:"design", o:"shared", op:"CXI+AI (components) + Judy's org (design system)", cf:"confirmed",
+  d:"Design system. Named by the team as its own reusable platform tooling.",
+  src:"cxi-ai.pfizer.com carries Zenith Design System Buildout as a CXI+AI AI Studio project, and lists Zenith alongside PfizerWeb as its platform and tooling. MCP Builder Platform page names Forge, Zenith, Axiom. Luca 25 Sep: someone in Judy's org owns the design system, we own the components."},
+ {id:"axiom", n:"Axiom", l:"design", o:"shared", op:"Dilawar (OSS, development) + Heather, Cozi team (US Commercial, design system)", cf:"confirmed",
+  d:"Design system built for Adobe Franklin and not currently portable off it. Development and design-system ownership sit in different organisations.",
+  src:"Spark Pro architecture doc states Axiom is Franklin-built and not considered portable. Filippos Tsakiridis appears against Forge, Zenith and Axiom in the MCP Builder R&R table, but that row is scoped to design systems as consuming systems for MCP work, not to owning Axiom. Development sits with Dilawar in OSS; the design system itself is owned by Heather in Cozi team, US Commercial. Confirmed by Christos 25 Sep. Luca 25 Sep: same split as Zenith, we own the components.",
+  note:"Three-way split worth naming: Heather (US Commercial) owns the design system, Dilawar (OSS) owns development, and it is technically hard-coupled to Adobe Franklin, which is contested. Any headless application goes without it or rebuilds it. So the Franklin question is not only about a publishing tool, and settling it needs two organisations in the room."},
+
+ /* ---- IDENTITY ---- */
+ {id:"grv", n:"GRV", l:"identity", o:"shared", op:"Chris Luther (OSS, Sule's team); PO Alejandro Otero", cf:"confirmed",
+  d:"Identity and access for web properties. GRV5 is the current generation.",
+  src:"Confluence: GRV5 Integrating with Vanilla Edison Lite (RP space). Chris Luther runs the identity and access services from within OSS; Alejandro Otero is PO for GRV, GCP and GPA projects. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, we run parts of it.",
+  note:"Sits inside OSS but outside CXI+AI, so it is a consume rather than an own. Different from the infrastructure band, which sits in Pfizer Digital."},
+ {id:"gcp", n:"GCP", l:"identity", o:"shared", op:"Chris Luther (OSS, Sule's team); PO Alejandro Otero", cf:"confirmed",
+  d:"Authentication service. Scope and boundary against GRV and GPA still to be established.",
+  src:"Luca's spec email. Chris Luther runs the identity and access services from within OSS; Alejandro Otero is PO for GRV, GCP and GPA projects. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, we run parts of it.",
+  note:"One service owner and one PO now cover all three auth systems, which resolves who to ask. It does not resolve which system a new site should use. That decision rule is still written down nowhere."},
+ {id:"gpa", n:"GPA", l:"identity", o:"shared", op:"Chris Luther (OSS, Sule's team); PO Alejandro Otero", cf:"confirmed",
+  d:"Authentication service. Scope and boundary against GRV still to be established.",
+  src:"Luca's spec email. Chris Luther runs the identity and access services from within OSS; Alejandro Otero is PO for GRV, GCP and GPA projects. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, we run parts of it."},
+
+ /* ---- PROVISION ---- */
+ {id:"dmp", n:"DMP", l:"provision", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Site and property provisioning. Controls allowed site types and frameworks.",
+  src:"Confluence: DMS-3342 Site Type Restriction for Edison Lite Sites in DMP. MCP register: internal, no API. OSS Engineering has a dedicated DMP SME doing DMP development (Syed). Classified as owned on that basis, confirmed by Christos 25 Sep."},
+ {id:"reqmgr", n:"Request Manager / PDRM", l:"provision", o:"consume", op:"GSO automation team", cf:"confirmed",
+  d:"Self-service access request and revoke forms across platforms.",
+  src:"Jira TRON-24243 moves Request service ownership to GSO automation. TRON access-form tickets."},
+ {id:"spaces", n:"Spaces", l:"provision", o:"consume", op:"Not established", cf:"inferred",
+  d:"Platform portal for site and stack lifecycle. Replaces Edison Dashboard in this layer.",
+  src:"Named by Luca 25 Sep as the replacement for Edison Dashboard. spaces.pfizer appears as the host for Stratus project paths in the OSS Toolkit and Spark Pro documentation. Owner and exact scope still to confirm.",
+  note:"Added on Luca's instruction. I have not verified what Spaces covers beyond the Stratus paths, so scope and operator are both open."},
+ {id:"bench", n:"Bench / Stack", l:"provision", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Spark Pro provisioning surface. Per-branch preview environments.",
+  src:"Spark Pro doc (stack--branch.app.bench.pfizer). T&C Scanner page links stack.bench.pfizer."},
+
+ /* ---- INFRA ---- */
+ {id:"cloudflare", n:"Cloudflare", l:"infra", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Edge network, WAF and Workers runtime. Both Edison sites and Spark Pro stacks terminate here.",
+  src:"Spark Pro doc (Workers via OpenNext). Jira TRON Cloudflare/CFA tickets for Edison.",
+  note:"Highest-concentration dependency in the estate. Two otherwise separate routes converge on it."},
+ {id:"aws", n:"AWS", l:"infra", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Compute and storage underpinning Edison Custom and platform services.",
+  src:"Confluence: Platform Comparison (Edison Custom on Amazon). Jira STRT CloudWatch tickets."},
+ {id:"dns", n:"DNS", l:"infra", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Domain and cutover management.",
+  src:"Confluence: NextGen PMI Launch Procedure references DNS cutover tickets. Confirmed by Christos 25 Sep."},
+ {id:"biblio", n:"Biblio", l:"infra", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Search and event backbone for the web estate. OpenSearch driver plus an event bus.",
+  src:"Jira SPC-3639 connects Franklin search to the Biblio OpenSearch driver; TRON-19122 uses the Biblio EventBus; TRON-37501 grants Biblio API access to Bench Stack Workers; TRON-18671 compares DMP against Biblio.",
+  note:"Operator inferred from the TRON platform project rather than stated outright."},
+ {id:"llmhub", n:"LLMHub", l:"infra", o:"consume", op:"Not established", cf:"confirmed",
+  d:"Single governed API to approved LLM providers (Vox GenAI, Bedrock) with one auth model. Formerly SlimLLM.",
+  src:"Confluence PI1 space: LLMHub architecture overview. Jira TRON-29299 and TRON-29879. Repo terraform-electron-llmhub-infra.",
+  note:"The model access layer for every AI component that needs an LLM, so nothing AI-driven works without it. No owning team is established, which makes this the most consequential ownership gap on the map: a single point of dependency for AI across the estate with nobody named as accountable for it. The terraform-electron-llmhub-infra repo suggests the platform side, but that is a repo name, not an owner. Confirmed by Christos 25 Sep."},
+ {id:"github", n:"GitHub / CI", l:"infra", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"Source control and build pipelines. Git-push deployment for Spark Pro stacks.",
+  src:"Spark Pro doc. Jira TRON GitHub org and billing tickets."},
+
+ /* ---- MCP ---- */
+ {id:"mcpbuilder", n:"MCP Builder Platform", l:"mcp", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Governed MCP foundation and standards for OSS applications.",
+  src:"Confluence: MCP Builder Platform (IS space). Owner Christos Tsiotras."},
+ {id:"c4weekly", n:"C4 Weekly", l:"mcp", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Reporting tool with a live MCP server. The existing end-to-end proof.",
+  src:"MCP Application Register: already running, see case study."},
+ {id:"compass", n:"Compass Suite", l:"mcp", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Agentic submission and build platform.",
+  src:"MCP Application Register (internal)."},
+ {id:"osshub", n:"Beacon", l:"mcp", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Front door for OSS services. MCP connection candidate.",
+  src:"MCP Application Register lists it as OSS Hub, its former name. Rebranded to Beacon. Confirmed by Christos 25 Sep."},
+ {id:"launchpad", n:"Launchpad", l:"mcp", o:"consume", op:"Mike Lamb's team (Pfizer Digital)", cf:"confirmed",
+  d:"MCP connection candidate. No longer an OSS-owned component.",
+  src:"MCP Application Register lists it as internal with the owner column blank, which predates the move. Transferred to Mike Lamb's team. Confirmed by Christos 25 Sep.",
+  note:"Ownership moved out of OSS. If it stays on the MCP candidate list, the retrofit ask for it now has to go through Digital rather than being ours to schedule."},
+ {id:"kirby", n:"Kirby", l:"mcp", o:"own", op:"CXI+AI / OSS&AI", cf:"confirmed",
+  d:"Built and managed in house. MCP connection candidate, API work in progress.",
+  src:"MCP Application Register (internal, existing API WIP). Confirmed by Christos 25 Sep."}
+];
+
+/* Edges. cf: confirmed | inferred */
+var E = [
+ {a:"webbuilder", b:"edisonlite", t:"deploys into", cf:"confirmed", why:"Web Builder test scope covers integration with Edison Lite. DMP exposes a combined Edison Lite \u2013 Web Builder site type."},
+ {a:"sparkpro", b:"cloudflare", t:"runs on", cf:"confirmed", why:"Spark Pro stacks deploy as Cloudflare Workers via OpenNext."},
+ {a:"edisonlite", b:"cloudflare", t:"served through", cf:"confirmed", why:"Edison site guard and CFA configuration handled in Cloudflare."},
+ {a:"edisoncustom", b:"aws", t:"hosted on", cf:"confirmed", why:"Edison Custom is decoupled Drupal 9 on Amazon."},
+ {a:"dmp", b:"edisonlite", t:"provisions", cf:"confirmed", why:"DMS-3342 restricts allowed Edison Lite site types and frameworks in DMP."},
+ {a:"reqmgr", b:"webbuilder", t:"grants access to", cf:"confirmed", why:"TRON tickets for the Web Builder access and revoke forms."},
+ {a:"reqmgr", b:"franklin", t:"grants access to", cf:"confirmed", why:"TRON-14225 Adobe Franklin user access management via self-service."},
+ {a:"grv", b:"edisonlite", t:"authenticates", cf:"confirmed", why:"GRV5 integration supported on Canvas Web Builder plus Edison Lite."},
+ {a:"grv", b:"webbuilder", t:"authenticates", cf:"confirmed", why:"Same GRV5 integration page."},
+ {a:"webformbuilder", b:"sparkpro", t:"hosted on", cf:"confirmed", why:"Webform Builder Architecture: project hosted on the Stratus platform, built on the AWS stack."},
+ {a:"pfisr", b:"aws", t:"stores in", cf:"confirmed", why:"PFI.SR S3 bucket backup process documented in the LPS space."},
+ {a:"pfisr", b:"edisonlite", t:"redirects to", cf:"inferred", why:"Multi-domain short URL FRD is scoped to Edison. It points at Edison-hosted pages rather than serving them. Exact coupling not verified."},
+ {a:"video", b:"brightcove", t:"streams through", cf:"confirmed", why:"Video Manager uploads the file then sends it to the streaming platform for processing."},
+ {a:"video", b:"osshub", t:"API integration", cf:"confirmed", why:"Confluence: API integration Video Manager and OSS HUB, video-manager/api/oss-hub endpoint."},
+ {a:"video", b:"aws", t:"stores in", cf:"confirmed", why:"Dedicated S3 bucket and IAM role recorded in General Information - Video Manager."},
+ {a:"intman", b:"pfizerpro", t:"embeds into", cf:"confirmed", why:"Site states interactive calculators and estimators are typically embedded within PfizerPro."},
+ {a:"pfizerweb", b:"webbuilder", t:"exports designs to", cf:"inferred", why:"Site states designs export straight to the platform developers build on. The specific target platform is not named."},
+ {a:"mcpbuilder", b:"forge", t:"consumes", cf:"confirmed", why:"Forge is the reference design system the MCP Builder Platform builds against. Confirmed by Christos 25 Sep."},
+ {a:"pfizerweb", b:"llmhub", t:"calls models via", cf:"confirmed", why:"Christos 25 Sep: LLMHub is the model access layer for every AI component that needs an LLM to function. PfizerWeb's AI assembles designs from approved components."},
+ {a:"compass", b:"llmhub", t:"calls models via", cf:"confirmed", why:"Christos 25 Sep: LLMHub is the model access layer for every AI component that needs an LLM to function. Compass Suite is an agentic platform."},
+ {a:"amp", b:"llmhub", t:"calls models via", cf:"confirmed", why:"Christos 25 Sep: LLMHub is the model access layer for every AI component that needs an LLM to function."},
+ {a:"franklin", b:"smartcapture", t:"triggers on publish", cf:"confirmed", why:"Adobe Franklin Integration: Franklin must support triggering services such as SmartCapture on publish via Sidekick."},
+ {a:"smartcapture", b:"promomats", t:"evidences for", cf:"inferred", why:"SmartCapture is required as the standard to aid MLR reviews and record keeping. The handoff into the review system is not documented."},
+ {a:"franklin", b:"biblio", t:"search powered by", cf:"confirmed", why:"Jira SPC-3639: connect Franklin search to the new Biblio OpenSearch driver."},
+ {a:"bench", b:"biblio", t:"API access to", cf:"confirmed", why:"TRON-37501 requests per-application Biblio credentials for Bench Stack example Workers."},
+ {a:"bench", b:"llmhub", t:"provisions access to", cf:"confirmed", why:"Christos 25 Sep. Bench Stack provisions the access path to LLMHub for the applications built on it."},
+ {a:"dmp", b:"biblio", t:"reconciled against", cf:"inferred", why:"TRON-18671 compares DMP against Biblio for a web discrepancy report, implying overlapping records of the estate."},
+ {a:"axiom", b:"franklin", t:"built for", cf:"confirmed", why:"Spark Pro doc: Axiom is built for Adobe Franklin and not considered portable."},
+ {a:"pfa", b:"franklin", t:"also runs on", cf:"confirmed", why:"Confluence: PfizerForAll - Adobe Franklin, Edison Dashboard entry websites/adobe/pfizerforallcomus."},
+ {a:"pfa", b:"edisonlite", t:"runs on", cf:"confirmed", why:"PfizerForAll - Edison Lite, live since Aug 2024."},
+ {a:"websdk", b:"adobeanalytics", t:"feeds", cf:"confirmed", why:"Adobe WebSDK Implementation Guidelines."},
+ {a:"bench", b:"sparkpro", t:"provisions", cf:"confirmed", why:"Per-branch preview environments at stack--branch.app.bench.pfizer."},
+ {a:"spaces", b:"edisonlite", t:"manages", cf:"confirmed", why:"Edison Dashboard site records for Lite properties."},
+ {a:"github", b:"sparkpro", t:"triggers build", cf:"confirmed", why:"Git-push deployment model."},
+ {a:"promomats", b:"franklin", t:"approves for", cf:"inferred", why:"Review sits alongside authoring as a round trip in the architecture. Specific wiring not verified."},
+ {a:"promomats", b:"webbuilder", t:"approves for", cf:"inferred", why:"As above."},
+ {a:"veeva", b:"promomats", t:"source for", cf:"inferred", why:"PromoMats is a Vault application. Exact boundary not verified here."},
+ {a:"adobedam", b:"franklin", t:"supplies assets", cf:"inferred", why:"Asset layer feeds content management in both models."},
+ {a:"workfront", b:"amp", t:"sends events to", cf:"confirmed", why:"AMPM-1717 confirms Workfront can send AMP a real-time webhook, which AMP builds its notification engine on."},
+ {a:"workfront", b:"franklin", t:"briefs work into", cf:"inferred", why:"Management layer precedes authoring in Luca's lifecycle. Wiring unverified."},
+ {a:"pfizerpro", b:"edisonlite", t:"runs on", cf:"inferred", why:"Assumed from the Edison estate. Not verified."},
+ {a:"brandcom", b:"edisonlite", t:"runs on", cf:"inferred", why:"Assumed from the Edison estate. Not verified."},
+ {a:"vev", b:"edisonlite", t:"publishes to", cf:"inferred", why:"Vev integration page references an Edison Lite backup website. Direction unverified."}
+];
+
+/* ============================================================
+   LAYOUT — deterministic. Same positions every load.
+   ============================================================ */
+var W = 2560;
+var SX = 70, SY = 96, SW = 390, SGAP = 22;
+var BX = 300, BW = 2220, BH = 108, BGAP = 14, GUT = 280;
+var CHH = 64, CGAP = 10, SHEAD = 78;
+
+var byId = {}, byLayer = {};
+C.forEach(function(c){ byId[c.id] = c; (byLayer[c.l] = byLayer[c.l] || []).push(c); });
+
+/* stage columns grow to hold the fullest layer, and the bands follow them down,
+   so adding components never pushes anything outside its box */
+var maxStage = 0;
+LAYERS.forEach(function(L){
+  if(L.kind === "stage") maxStage = Math.max(maxStage, (byLayer[L.id] || []).length);
+});
+var nBands = LAYERS.filter(function(z){ return z.kind === "band"; }).length;
+var SH = SHEAD + maxStage * (CHH + CGAP) - CGAP + 24;
+var BY = SY + SH + 88;
+var H  = BY + nBands * (BH + BGAP) - BGAP + 70;
+
+LAYERS.forEach(function(L, i){
+  if(L.kind === "stage"){
+    L.x = SX + L.col * (SW + SGAP); L.y = SY; L.w = SW; L.h = SH;
+  } else {
+    var bi = LAYERS.filter(function(z){return z.kind==="band"}).indexOf(L);
+    L.x = BX; L.y = BY + bi * (BH + BGAP); L.w = BW; L.h = BH;
+  }
+  var list = byLayer[L.id] || [];
+  if(L.kind === "stage"){
+    var top = L.y + SHEAD;
+    list.forEach(function(c, j){
+      c.x = L.x + 18; c.y = top + j * (CHH + CGAP); c.w = L.w - 36; c.h = CHH;
+    });
+  } else {
+    /* label column must clear the longest band title and subtitle */
+    var cw = 208, cgx = 12, cx = L.x + 462, cy = L.y + 29, ch2 = 50;
+    list.forEach(function(c, j){
+      c.x = cx + j * (cw + cgx); c.y = cy; c.w = cw; c.h = ch2;
+    });
+  }
+});
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+var NS = "http://www.w3.org/2000/svg";
+var svg = document.getElementById("svg");
+var defs = el("defs");
+[["ah","#000067"],["ahb","#0000C9"]].forEach(function(m){
+  var mk = el("marker",{id:m[0],viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(el("path",{d:"M0 0 L10 5 L0 10 z",fill:m[1]}));
+  defs.appendChild(mk);
+});
+svg.appendChild(defs);
+var root = el("g");
+svg.appendChild(root);
+var gFlow = el("g"), gTerr = el("g"), gEdge = el("g"), gChip = el("g");
+[gFlow, gTerr, gEdge, gChip].forEach(function(g){ root.appendChild(g); });
+
+function el(t, a){ var n = document.createElementNS(NS, t); if(a) for(var k in a) n.setAttribute(k, a[k]); return n; }
+function txt(s, a){ var n = el("text", a); n.textContent = s; return n; }
+
+/* flow arrow behind the stage row */
+(function(){
+  var y = SY + SH + 26, x1 = SX + 40, x2 = SX + 5*(SW+SGAP) + SW - 40;
+  gFlow.appendChild(el("path", {d:"M"+x1+" "+y+" L"+x2+" "+y, class:"flow"}));
+  var lb = txt("Content flows left to right. Review and measure loop back.", {x:(x1+x2)/2, y:y+6, "text-anchor":"middle", class:"tsub", "font-size":"15"});
+  gFlow.appendChild(lb);
+})();
+
+/* territories */
+LAYERS.forEach(function(L){
+  var g = el("g"); g.setAttribute("data-layer", L.id);
+  var r = el("rect", {x:L.x, y:L.y, width:L.w, height:L.h, rx:14, class:"terr" + (L.kind==="band" ? " band" : "")});
+  r.classList.add("hot");
+  r.addEventListener("click", function(ev){ ev.stopPropagation(); flyTo(L); });
+  g.appendChild(r);
+  var ty = L.kind === "band" ? L.y + 44 : L.y + 34;
+  g.appendChild(txt(L.t, {x:L.x+20, y:ty, class:"tname", "font-size":"20"}));
+  g.appendChild(txt(L.s, {x:L.x+20, y:ty+22, class:"tsub", "font-size":"13"}));
+  if(L.kind === "band"){
+    g.appendChild(el("line", {x1:L.x+440, y1:L.y+16, x2:L.x+440, y2:L.y+L.h-16,
+      stroke:"var(--ice)", "stroke-width":"1.5", class:"lod-mid"}));
+  }
+
+  var list = byLayer[L.id] || [];
+  /* far-zoom summary */
+  var sg = el("g", {class:"lod-far"});
+  var order = ["own","experience","shared","contested","consume"];
+  var bx, byy, bw, bh, ox, oy, oanch;
+  if(L.kind === "stage"){
+    var cx = L.x + L.w/2, cy = L.y + L.h/2;
+    sg.appendChild(txt(String(list.length), {x:cx, y:cy, "text-anchor":"middle", class:"tbig"}));
+    sg.appendChild(txt(list.length===1?"component":"components", {x:cx, y:cy+28, "text-anchor":"middle", class:"tbiglbl"}));
+    bw = 230; bx = cx - bw/2; byy = cy + 52; bh = 10;
+    ox = cx; oy = byy + bh + 18; oanch = "middle";
+  } else {
+    /* counts live in the gutter to the LEFT of the band, never over the components */
+    var gr = L.x - 20;
+    sg.appendChild(txt(String(list.length), {x:gr, y:L.y+46, "text-anchor":"end", class:"tbig", "font-size":"36"}));
+    sg.appendChild(txt(list.length===1?"component":"components", {x:gr, y:L.y+66, "text-anchor":"end", class:"tbiglbl", "font-size":"12.5"}));
+    bw = 180; bx = gr - bw; byy = L.y + 78; bh = 10;
+    ox = gr; oy = L.y + 102; oanch = "end";
+  }
+  var seg = list.length ? bw/list.length : 0, k = 0;
+  order.forEach(function(o){
+    list.filter(function(c){ return c.o===o; }).forEach(function(){
+      sg.appendChild(el("rect", {x:bx + k*seg, y:byy, width:Math.max(seg-2.5,2), height:bh, rx:2, fill:OWN[o].c}));
+      k++;
+    });
+  });
+  if(list.length){
+    var owned = list.filter(function(c){ return c.o==="own"; }).length;
+    sg.appendChild(txt(owned ? owned+" owned & operated" : "nothing owned here",
+      {x:ox, y:oy, "text-anchor":oanch, class:"tbiglbl", "font-size":"12.5",
+       fill: owned ? "var(--mgray)" : "var(--lav)"}));
+  } else {
+    sg.appendChild(el("rect",{x:L.x+18,y:L.y+70,width:L.w-36,height:L.h-90,rx:10,class:"empty"}));
+    sg.appendChild(txt("No components", {x:L.x+L.w/2, y:L.y+L.h/2, "text-anchor":"middle", class:"emptxt"}));
+  }
+  g.appendChild(sg);
+  gTerr.appendChild(g);
+});
+
+/* edges */
+/* stop the line at the box edge, not the centre, so the arrowhead is visible */
+function anchor(c, tx2, ty2){
+  var cx = c.x + c.w/2, cy = c.y + c.h/2, dx = tx2 - cx, dy = ty2 - cy;
+  if(!dx && !dy) return [cx, cy];
+  var sx = dx ? (c.w/2 + 7)/Math.abs(dx) : Infinity;
+  var sy = dy ? (c.h/2 + 7)/Math.abs(dy) : Infinity;
+  var s = Math.min(sx, sy);
+  return [cx + dx*s, cy + dy*s];
+}
+var edgeEls = [], pairSeen = {};
+E.forEach(function(e){
+  var a = byId[e.a], b = byId[e.b];
+  if(!a || !b) return;
+  var g = el("g", {class:"eg"});
+  var ac = [a.x+a.w/2, a.y+a.h/2], bc = [b.x+b.w/2, b.y+b.h/2];
+  var p1 = anchor(a, bc[0], bc[1]), p2 = anchor(b, ac[0], ac[1]);
+  var dx = p2[0]-p1[0], dy = p2[1]-p1[1], len = Math.sqrt(dx*dx + dy*dy) || 1;
+  /* fan out lines that share a target so they stay distinguishable */
+  var key = [e.a, e.b].sort().join("|");
+  pairSeen[e.b] = (pairSeen[e.b] || 0) + 1;
+  var bow = Math.min(70, len*0.13) + (pairSeen[e.b] % 3) * 10;
+  var mx = (p1[0]+p2[0])/2 - (dy/len)*bow, my = (p1[1]+p2[1])/2 + (dx/len)*bow;
+  var p = el("path", {d:"M"+p1[0]+" "+p1[1]+" Q"+mx+" "+my+" "+p2[0]+" "+p2[1],
+    class:"edge"+(e.cf==="inferred" ? " inf" : "")});
+  g.appendChild(p);
+  var lx = (p1[0] + 2*mx + p2[0])/4, ly = (p1[1] + 2*my + p2[1])/4;
+  g.appendChild(txt(e.t, {x:lx, y:ly-5, "text-anchor":"middle", class:"elbl"}));
+  gEdge.appendChild(g);
+  edgeEls.push({e:e, g:g, path:p});
+});
+
+/* chips */
+var chipEls = {};
+C.forEach(function(c){
+  var g = el("g", {class:"chip cf-"+c.cf+" lod-mid"});
+  g.setAttribute("data-id", c.id);
+  g.appendChild(el("rect", {x:c.x, y:c.y, width:c.w, height:c.h, rx:9, class:"bg"}));
+  g.appendChild(el("rect", {x:c.x, y:c.y, width:5, height:c.h, rx:2.5, fill:OWN[c.o].c, class:"ob"}));
+  g.appendChild(txt(c.n, {x:c.x+16, y:c.y+22, class:"n"}));
+  var sub = el("text", {x:c.x+16, y:c.y+38, class:"d lod-near"});
+  sub.textContent = clip(c.d, c.w > 300 ? 46 : 30);
+  g.appendChild(sub);
+  var own = el("text", {x:c.x+16, y:c.y+54, class:"d lod-near", fill:OWN[c.o].c, "font-weight":"700"});
+  own.textContent = OWN[c.o].label + (c.cf==="unknown" ? "  ·  unverified" : "");
+  if(c.h > 50) g.appendChild(own);
+  g.addEventListener("click", function(ev){ ev.stopPropagation(); select(c.id); });
+  gChip.appendChild(g);
+  chipEls[c.id] = g;
+});
+function clip(s, n){ return s.length > n ? s.slice(0, n-1).trim() + "\u2026" : s; }
+
+/* ============================================================
+   ZOOM / PAN
+   ============================================================ */
+var z = 0.45, tx = 0, ty = 0, FAR = 0.451, NEAR = 1.2, FITMAX = 0.45;
+function apply(){
+  root.setAttribute("transform", "translate("+tx+","+ty+") scale("+z+")");
+  var lod = z < FAR ? "far" : (z < NEAR ? "mid" : "near");
+  svg.setAttribute("data-lod", lod);
+  document.getElementById("lvl").textContent =
+    (lod==="far" ? "Whole estate" : lod==="mid" ? "Components" : "Detail & integrations") + "  ·  " + Math.round(z*100) + "%";
+}
+function vp(){ var r = svg.getBoundingClientRect(); return {w:r.width, h:r.height}; }
+function fit(){
+  var v = vp();
+  z = Math.min(FITMAX, v.w/(W+80), v.h/(H+60));
+  tx = (v.w - W*z)/2; ty = (v.h - H*z)/2; apply();
+}
+function zoomAt(f, px, py){
+  var nz = Math.max(0.18, Math.min(3.2, z*f));
+  tx = px - (px - tx) * (nz/z); ty = py - (py - ty) * (nz/z); z = nz; apply();
+}
+/* legend clicks isolate components, but at whole-estate zoom nothing has
+   resolved into a component yet, so jump straight past that threshold */
+function ensureComponentsVisible(){
+  if(curView !== "map") return;
+  var target = FAR + 0.1;
+  if(z < target){ var v = vp(); zoomAt(target/z, v.w/2, v.h/2); }
+}
+function flyTo(L){
+  var v = vp(), pad = 70;
+  var nz = Math.min(2.2, Math.min(v.w/(L.w+pad*2), v.h/(L.h+pad*2)));
+  nz = Math.max(nz, NEAR + 0.05);
+  var sx = tx, sy = ty, sz = z;
+  var ez = nz, ex = v.w/2 - (L.x + L.w/2)*nz, ey = v.h/2 - (L.y + L.h/2)*nz;
+  var t0 = performance.now(), D = 420;
+  (function step(t){
+    var k = Math.min(1, (t-t0)/D), e = k<0.5 ? 2*k*k : 1-Math.pow(-2*k+2,2)/2;
+    z = sz+(ez-sz)*e; tx = sx+(ex-sx)*e; ty = sy+(ey-sy)*e; apply();
+    if(k < 1) requestAnimationFrame(step);
+  })(t0);
+}
+svg.addEventListener("wheel", function(ev){
+  ev.preventDefault();
+  var r = svg.getBoundingClientRect();
+  zoomAt(ev.deltaY < 0 ? 1.13 : 1/1.13, ev.clientX - r.left, ev.clientY - r.top);
+}, {passive:false});
+var dragging = false, lx = 0, ly = 0, moved = 0;
+svg.addEventListener("pointerdown", function(ev){
+  dragging = true; moved = 0; lx = ev.clientX; ly = ev.clientY;
+  svg.classList.add("drag"); svg.setPointerCapture(ev.pointerId);
+});
+svg.addEventListener("pointermove", function(ev){
+  if(!dragging) return;
+  var dx = ev.clientX - lx, dy = ev.clientY - ly;
+  moved += Math.abs(dx) + Math.abs(dy);
+  tx += dx; ty += dy; lx = ev.clientX; ly = ev.clientY; apply();
+});
+function endDrag(){ dragging = false; svg.classList.remove("drag"); }
+svg.addEventListener("pointerup", function(ev){
+  endDrag();
+  if(moved < 4 && ev.target === svg) deselect();
+});
+svg.addEventListener("pointercancel", endDrag);
+function zoomActive(f){
+  if(curView === "globe"){ var w = vp2(); zoomAt2(f, w.w/2, w.h/2); }
+  else { var v = vp(); zoomAt(f, v.w/2, v.h/2); }
+}
+document.getElementById("zin").onclick  = function(){ zoomActive(1.35); };
+document.getElementById("zout").onclick = function(){ zoomActive(1/1.35); };
+document.getElementById("zfit").onclick = function(){
+  deselect();
+  resetFilter();
+  gapsEl.classList.remove("open");
+  if(curView === "globe"){
+    fit2();
+    var ob = document.getElementById("gorph");
+    ob.setAttribute("aria-pressed","false"); svg2.classList.remove("orph");
+  } else fit();
+};
+
+/* ============================================================
+   SELECTION PANEL
+   ============================================================ */
+var panel = document.getElementById("panel"), selId = null, curView = "map";
+
+/* Both the legend and clicking a component work the same way now:
+   pick one or more things to isolate, everything else goes quiet.
+   Arrows are Atlas-only now, so this only matters visually there;
+   the Map view just isolates chips. refreshVisuals is the single
+   place that applies whichever is active. */
+function refreshVisuals(){
+  var byState = isolate.size > 0;
+  C.forEach(function(c){
+    var hideByState = byState && !isolate.has(c.o);
+    var hideBySel   = !!selId && c.id !== selId;
+    var hide = selId ? hideBySel : hideByState;
+    chipEls[c.id].classList.toggle("dim", hide);
+    chipEls[c.id].classList.toggle("sel", c.id === selId);
+    if(typeof cityEls !== "undefined"){
+      cityEls[c.id].classList.toggle("dim", hide);
+      cityEls[c.id].classList.toggle("sel", c.id === selId);
+    }
+  });
+  edgeEls.forEach(function(x){
+    var aIn = !byState || isolate.has(byId[x.e.a].o), bIn = !byState || isolate.has(byId[x.e.b].o);
+    var hit = !!selId && (x.e.a===selId || x.e.b===selId);
+    x.g.classList.toggle("off", selId ? !hit : !(aIn && bIn));
+    x.g.classList.toggle("on", hit);
+  });
+  svg.classList.toggle("focus", !!selId);
+  if(typeof roadEls !== "undefined"){
+    roadEls.forEach(function(x){
+      var aIn = !byState || isolate.has(byId[x.e.a].o), bIn = !byState || isolate.has(byId[x.e.b].o);
+      var hit = !!selId && (x.e.a===selId || x.e.b===selId);
+      x.g.classList.toggle("off", selId ? !hit : !(aIn && bIn));
+      x.g.classList.toggle("on", hit);
+    });
+    svg2.classList.toggle("focus", !!selId);
+  }
+}
+function deselect(){
+  selId = null; panel.classList.remove("open");
+  refreshVisuals();
+}
+function select(id){
+  var c = byId[id]; if(!c) return;
+  selId = id;
+  refreshVisuals();
+  var links = [];
+  edgeEls.forEach(function(x){
+    var hit = x.e.a===id || x.e.b===id;
+    if(hit){
+      var other = x.e.a===id ? x.e.b : x.e.a;
+      links.push({dir: x.e.a===id ? "out" : "in", t:x.e.t, o:other, cf:x.e.cf, why:x.e.why});
+    }
+  });
+  var L = LAYERS.filter(function(z){return z.id===c.l})[0];
+  var h = "";
+  h += '<div class="ph"><h3>'+esc(c.n)+'</h3><button class="close" aria-label="Close">&times;</button></div><div class="pb">';
+  h += '<p>'+esc(c.d)+'</p>';
+  h += '<dl class="kv">';
+  h += '<dt>Layer</dt><dd>'+esc(L ? L.t : c.l)+'</dd>';
+  h += '<dt>Ownership</dt><dd><span class="pill"><span class="dot" style="background:'+OWN[c.o].c+'"></span>'+OWN[c.o].label+'</span></dd>';
+  h += '<dt>Operated by</dt><dd>'+esc(c.op)+'</dd>';
+  h += '<dt>Confidence</dt><dd>'+({confirmed:"Confirmed against a source",inferred:"Inferred, needs confirming",unknown:"Unverified"})[c.cf]+'</dd>';
+  if(c.st) h += '<dt>Status</dt><dd>'+esc(c.st)+'</dd>';
+  h += '</dl>';
+  h += '<p style="font-size:13px;color:var(--mgray)">'+OWN[c.o].desc+'</p>';
+  if(c.note) h += '<h4>Reasoning to align on</h4><p>'+esc(c.note)+'</p>';
+  h += '<h4>Integrations ('+links.length+')</h4>';
+  if(links.length){
+    h += '<ul class="lnk">' + links.map(function(k){
+      var o = byId[k.o];
+      return '<li data-go="'+k.o+'"><b>'+(k.dir==="out"?"":"\u2190 ")+esc(k.t)+' '+esc(o?o.n:k.o)+'</b><em>'+(k.cf==="confirmed"?"Confirmed":"Inferred")+'. '+esc(k.why)+'</em></li>';
+    }).join('') + '</ul>';
+  } else {
+    h += '<div class="none">No integrations recorded. Either this component is genuinely isolated, or its dependencies are not represented anywhere in the vault. Both are findings.</div>';
+  }
+  h += '<div class="src"><strong>Source:</strong> '+esc(c.src)+'</div>';
+  h += '</div>';
+  panel.innerHTML = h;
+  panel.classList.add("open");
+  panel.querySelector(".close").onclick = deselect;
+  Array.prototype.forEach.call(panel.querySelectorAll("[data-go]"), function(li){
+    li.onclick = function(){ select(li.getAttribute("data-go")); };
+  });
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, function(m){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]; }); }
+
+/* ============================================================
+   OWNERSHIP FILTER — clicking a state isolates it: only components
+   in that state (and their arrows) stay visible. Click a second
+   state and both stay visible together; the rest stays quiet.
+   ============================================================ */
+var isolate = new Set();
+var lgd = document.getElementById("lgd");
+var legendBtn = {};
+function applyFilter(){ refreshVisuals(); }
+function resetFilter(){
+  isolate.clear();
+  Object.keys(legendBtn).forEach(function(k){
+    legendBtn[k].wrap.classList.remove("iso", "excluded");
+    legendBtn[k].btn.setAttribute("aria-pressed", "false");
+  });
+  refreshVisuals();
+}
+Object.keys(OWN).forEach(function(k){
+  var wrap = document.createElement("span");
+  wrap.className = "ti";
+  var b = document.createElement("button");
+  b.type = "button"; b.setAttribute("aria-pressed","false");
+  b.setAttribute("aria-describedby", "tt-"+k);
+  b.innerHTML = '<span class="dot" style="background:'+OWN[k].c+'"></span>'+OWN[k].label;
+  b.onclick = function(){
+    if(isolate.has(k)) isolate.delete(k); else isolate.add(k);
+    Object.keys(legendBtn).forEach(function(j){
+      var iso = isolate.has(j);
+      legendBtn[j].wrap.classList.toggle("iso", iso);
+      legendBtn[j].wrap.classList.toggle("excluded", isolate.size>0 && !iso);
+      legendBtn[j].btn.setAttribute("aria-pressed", iso ? "true" : "false");
+    });
+    deselect();
+    refreshVisuals();
+    if(isolate.size > 0){ ensureComponentsVisible(); ensureCitiesVisible(); }
+  };
+  var tt = document.createElement("span");
+  tt.className = "tt"; tt.id = "tt-"+k; tt.setAttribute("role","tooltip");
+  tt.innerHTML = '<b>'+OWN[k].label+'</b>'+OWN[k].desc;
+  wrap.appendChild(b); wrap.appendChild(tt);
+  lgd.appendChild(wrap);
+  legendBtn[k] = { wrap: wrap, btn: b };
+});
+
+/* ============================================================
+   GAPS — derived from the register, not written by hand
+   ============================================================ */
+function buildGaps(){
+  var out = [];
+  var deg = {}; C.forEach(function(c){ deg[c.id]=0; });
+  E.forEach(function(e){ if(deg[e.a]!==undefined) deg[e.a]++; if(deg[e.b]!==undefined) deg[e.b]++; });
+
+  /* 1. no owned capability in a layer */
+  LAYERS.forEach(function(L){
+    var list = byLayer[L.id] || [];
+    if(!list.length) return;
+    if(!list.some(function(c){ return c.o==="own"; })){
+      out.push({k:"cap", tag:"Capability gap", h:"No owned capability in "+L.t,
+        p:"Every component in this layer is consumed, shared or contested. Nothing here is built and run by OSS, so we have no lever of our own at this stage of the lifecycle.",
+        li:list.map(function(c){ return c.n+" ("+OWN[c.o].label.toLowerCase()+")"; })});
+    }
+  });
+
+  /* 2. overlap */
+  [{l:"author", n:"authoring routes"},{l:"assets", n:"asset stores"},{l:"identity", n:"authentication systems"},{l:"design", n:"design systems"},{l:"deliver", n:"hosting targets"}].forEach(function(s){
+    var list = byLayer[s.l] || [];
+    if(list.length >= 3){
+      out.push({k:"ovl", tag:"Overlap", h:list.length+" competing "+s.n,
+        p:"Multiple components answer the same question in this layer with no visible decision rule for which to use when. That is unmanaged duplication until someone writes the rule down.",
+        li:list.map(function(c){ return c.n; })});
+    }
+  });
+
+  /* 3. orphans */
+  var orph = C.filter(function(c){ return deg[c.id]===0; });
+  if(orph.length){
+    out.push({k:"orp", tag:"Dependency gap", h:orph.length+" components with no recorded integration",
+      p:"These sit in the estate with nothing connecting them to anything else. Either they are genuinely isolated, or their dependencies exist but are not written down anywhere we can find. Both need resolving before the map can be called complete.",
+      li:orph.map(function(c){ return c.n; })});
+  }
+
+  /* 4. evidence */
+  var unk = C.filter(function(c){ return c.cf==="unknown"; });
+  if(unk.length){
+    out.push({k:"evd", tag:"Evidence gap", h:unk.length+" components are unverified",
+      p:"Named in a brief or a diagram but not confirmed against any source. They are drawn with dotted outlines so the map does not overstate what we actually know.",
+      li:unk.map(function(c){ return c.n; })});
+  }
+  var noOwner = C.filter(function(c){ return c.op === "Not established"; });
+  if(noOwner.length){
+    out.push({k:"evd", tag:"Evidence gap", h:noOwner.length+" component"+(noOwner.length>1?"s have":" has")+" no named operator",
+      p:"Classified on the map, but nobody has been able to say which team actually runs it. That is a short conversation rather than a research project, and it is the last open question on the register.",
+      li:noOwner.map(function(c){ return c.n; })});
+  }
+
+  /* 5. contested */
+  var cont = C.filter(function(c){ return c.o==="contested"; });
+  if(cont.length){
+    out.push({k:"own", tag:"Ownership", h:cont.length+" components are contested",
+      p:"Operational ownership of both is in transition, so the question is being forced whether or not anyone chooses to open it. OSS&AI's position is that these are orchestration and enablement layers. Note that the cited Web Publishing Options source argues that layers are separately sourceable and replaceable, which supports separability rather than combined governance. The stronger case is that the seams between layers need an owner, not the layers themselves.",
+      li:cont.map(function(c){ return c.n+" \u2014 currently "+c.op; })});
+  }
+
+  /* 6. single point of concentration */
+  var top = C.slice().sort(function(a,b){ return deg[b.id]-deg[a.id]; })[0];
+  if(top && deg[top.id] >= 3){
+    out.push({k:"orp", tag:"Concentration", h:top.n+" is the most depended-on component",
+      p:"It carries "+deg[top.id]+" recorded integrations, more than anything else on the map. Routes that are otherwise independent converge here, which makes it the highest-concentration dependency in the estate.",
+      li:E.filter(function(e){ return e.a===top.id||e.b===top.id; }).map(function(e){
+        var o = e.a===top.id ? e.b : e.a; return (byId[o]||{}).n + " " + e.t; })});
+  }
+  return out;
+}
+var gapsEl = document.getElementById("gaps");
+function renderGaps(){
+  var g = buildGaps();
+  var confirmed = C.filter(function(c){return c.cf==="confirmed"}).length;
+  var h = '<div class="gh"><h3>Gaps identified</h3><span style="font-size:12.5px;opacity:.8">Derived from the register. Change a component and these change with it.</span><button class="close" aria-label="Close">&times;</button></div><div class="gb">';
+  h += g.map(function(x){
+    return '<div class="gcard"><span class="tag t-'+x.k+'">'+x.tag+'</span><h4>'+esc(x.h)+'</h4><p>'+esc(x.p)+'</p>'+
+      (x.li && x.li.length ? '<ul>'+x.li.slice(0,9).map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+
+      (x.li.length>9?'<li>and '+(x.li.length-9)+' more</li>':'')+'</ul>' : '')+'</div>';
+  }).join('');
+  h += '<p class="gnote">Register completeness: '+confirmed+' of '+C.length+' components confirmed against a source, '+
+       E.filter(function(e){return e.cf==="confirmed"}).length+' of '+E.length+' integrations confirmed. '+
+       'This is a first draft built from Luca\u2019s spec, the Content Platform Architecture, the MCP Application Register and Confluence. It has not been validated beyond Christos. Treat every dashed line and every inferred integration as a question, not a fact.</p>';
+  h += '</div>';
+  gapsEl.innerHTML = h;
+  gapsEl.querySelector(".close").onclick = function(){ gapsEl.classList.remove("open"); };
+}
+document.getElementById("gapsBtn").onclick = function(){
+  if(!gapsEl.innerHTML) renderGaps();
+  gapsEl.classList.toggle("open");
+};
+
+/* ============================================================
+   ESTATE BOARD
+   ============================================================ */
+function renderBoard(){
+  /* Consume is no longer a column. It sits underneath as the foundation
+     everything above rests on, which is how Luca reads it. */
+  var cols = ["own","experience","shared","contested"];
+  var h = '<table class="btbl"><thead><tr><th class="rh"></th>';
+  cols.forEach(function(o){
+    h += '<th><div class="bhd"><span class="dot" style="background:'+OWN[o].c+'"></span>'+OWN[o].label+'</div></th>';
+  });
+  h += '</tr></thead><tbody>';
+  LAYERS.forEach(function(L){
+    var list = byLayer[L.id] || [];
+    if(!list.filter(function(c){ return c.o !== "consume"; }).length) return;
+    h += '<tr><th class="row">'+esc(L.t)+'</th>';
+    cols.forEach(function(o){
+      var cells = list.filter(function(c){ return c.o===o; });
+      h += '<td'+(cells.length?'':' class="z"')+'>' + cells.map(function(c){
+        return '<button class="bc '+c.cf+'" data-id="'+c.id+'">'+esc(c.n)+'</button>';
+      }).join('') + '</td>';
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+
+  /* the foundation band */
+  var cons = C.filter(function(c){ return c.o==="consume"; });
+  h += '<div class="found"><div class="fhd"><span class="dot" style="background:'+OWN.consume.c+'"></span>'+
+       '<strong>Foundation: consumed services</strong>'+
+       '<span>'+cons.length+' components everything above runs on. Mostly infrastructure and hosting from Digital, plus third-party platforms.</span></div>';
+  h += '<div class="frow">';
+  LAYERS.forEach(function(L){
+    var cells = (byLayer[L.id]||[]).filter(function(c){ return c.o==="consume"; });
+    if(!cells.length) return;
+    h += '<div class="fgrp"><h5>'+esc(L.t)+'</h5>'+cells.map(function(c){
+      return '<button class="bc '+c.cf+'" data-id="'+c.id+'">'+esc(c.n)+'</button>';
+    }).join('')+'</div>';
+  });
+  h += '</div></div>';
+
+  h += '<p style="font-size:13px;color:var(--mgray);margin-top:18px;max-width:920px">'+
+    'Hatched cells are empty on purpose: they show where the estate has nothing in that state. Dashed borders are inferred. '+
+    'The leftmost column is what OSS builds and runs. Layers with nothing above the foundation are hidden from the grid and appear only below.</p>';
+  boardEl.innerHTML = h;
+  Array.prototype.forEach.call(boardEl.querySelectorAll(".bc"), function(b){
+    b.onclick = function(){ setView("map"); select(b.getAttribute("data-id")); var c=byId[b.getAttribute("data-id")]; var L=LAYERS.filter(function(z){return z.id===c.l})[0]; if(L) flyTo(L); };
+  });
+}
+
+/* ============================================================
+   ATLAS — the same register drawn as a world. Continents are
+   layers, cities are components sized by how much depends on
+   them, roads are integrations. A city with no roads is an
+   orphan, which is exactly what this view is good at showing.
+   ============================================================ */
+var svg2 = document.getElementById("svg2");
+var root2 = el("g"); svg2.appendChild(root2);
+var gSea = el("g"), gRoad = el("g"), gCity = el("g");
+[gSea, gRoad, gCity].forEach(function(g){ root2.appendChild(g); });
+
+var GW = 2800, GH = 1420;
+var DEG = {}; C.forEach(function(c){ DEG[c.id] = 0; });
+E.forEach(function(e){ if(DEG[e.a]!==undefined) DEG[e.a]++; if(DEG[e.b]!==undefined) DEG[e.b]++; });
+
+/* ---- molecular scaffolding ----------------------------------------- */
+var NSNS = "http://www.w3.org/2000/svg";
+(function defsAtlas(){
+  var defs = el("defs");
+  /* deep-space wash behind everything */
+  var bg = document.createElementNS(NSNS, "radialGradient");
+  bg.setAttribute("id","bgGrad"); bg.setAttribute("cx","50%"); bg.setAttribute("cy","42%"); bg.setAttribute("r","78%");
+  [["0%","#12224A"],["55%","#0A0F2C"],["100%","#05061C"]].forEach(function(s){
+    var st = document.createElementNS(NSNS,"stop");
+    st.setAttribute("offset",s[0]); st.setAttribute("stop-color",s[1]); bg.appendChild(st);
+  });
+  defs.appendChild(bg);
+  /* nucleus glow, reused by every cluster */
+  var ng = document.createElementNS(NSNS,"radialGradient");
+  ng.setAttribute("id","nucGrad");
+  [["0%","#2E6FB7","0.55"],["45%","#1B3E77","0.28"],["100%","#0A0F2C","0"]].forEach(function(s){
+    var st = document.createElementNS(NSNS,"stop");
+    st.setAttribute("offset",s[0]); st.setAttribute("stop-color",s[1]); st.setAttribute("stop-opacity",s[2]); ng.appendChild(st);
+  });
+  defs.appendChild(ng);
+  /* soft bloom for bonds */
+  var f = document.createElementNS(NSNS,"filter");
+  f.setAttribute("id","bloom"); f.setAttribute("x","-25%"); f.setAttribute("y","-25%");
+  f.setAttribute("width","150%"); f.setAttribute("height","150%");
+  var blur = document.createElementNS(NSNS,"feGaussianBlur");
+  blur.setAttribute("stdDeviation","3"); blur.setAttribute("result","b");
+  var merge = document.createElementNS(NSNS,"feMerge");
+  ["b","SourceGraphic"].forEach(function(n){
+    var mn = document.createElementNS(NSNS,"feMergeNode"); mn.setAttribute("in",n); merge.appendChild(mn);
+  });
+  f.appendChild(blur); f.appendChild(merge); defs.appendChild(f);
+  svg2.appendChild(defs);
+  var sky = el("rect", {x:-4000, y:-4000, width:12000, height:12000, fill:"url(#bgGrad)"});
+  gSea.appendChild(sky);
+})();
+
+(function placeWorld(){
+  var st = LAYERS.filter(function(L){ return L.kind==="stage"; });
+  var bd = LAYERS.filter(function(L){ return L.kind==="band"; });
+  st.forEach(function(L,i){ var n=(byLayer[L.id]||[]).length;
+    L.gx = 330 + i*440; L.gy = 440 + Math.sin(i*1.05)*58; L.gr = 96 + n*16; });
+  bd.forEach(function(L,i){ var n=(byLayer[L.id]||[]).length;
+    L.gx = 330 + i*440; L.gy = 1105 + Math.cos(i*0.85)*46; L.gr = 82 + n*14; });
+  LAYERS.forEach(function(L, li){
+    var list = byLayer[L.id] || [];
+    list.forEach(function(c, j){
+      if(list.length === 1){ c.gx = L.gx; c.gy = L.gy; return; }
+      /* ring the atoms on an electron shell rather than scattering them */
+      var a = (j/list.length)*Math.PI*2 + li*0.7;
+      var rr = L.gr*(list.length>4 ? 0.64 : 0.52);
+      if(list.length > 6 && j % 2) rr *= 0.62;
+      c.gx = L.gx + Math.cos(a)*rr; c.gy = L.gy + Math.sin(a)*rr;
+    });
+  });
+})();
+
+LAYERS.forEach(function(L, i){
+  var list = byLayer[L.id] || [], g = el("g");
+  g.appendChild(el("circle", {cx:L.gx, cy:L.gy, r:L.gr*1.25, fill:"url(#nucGrad)", "pointer-events":"none"}));
+  g.appendChild(el("circle", {cx:L.gx, cy:L.gy, r:L.gr*0.72, class:"shell2"}));
+  var shell = el("circle", {cx:L.gx, cy:L.gy, r:L.gr, class:"shell"});
+  shell.addEventListener("click", function(ev){ ev.stopPropagation(); flyTo2(L); });
+  g.appendChild(shell);
+  var lab = el("g", {class:"g-far"});
+  lab.appendChild(txt(L.t, {x:L.gx, y:L.gy-4, class:"cname", "font-size":"26"}));
+  lab.appendChild(txt(list.length+(list.length===1?" COMPONENT":" COMPONENTS"), {x:L.gx, y:L.gy+22, class:"ccount", "font-size":"14"}));
+  var owned = list.filter(function(c){ return c.o==="own"; }).length;
+  lab.appendChild(txt(owned ? owned+" OWNED" : "NOTHING OWNED", {x:L.gx, y:L.gy+42, class:"ccount", "font-size":"13",
+    fill: owned ? "#7E9CC4" : "#A68AFF"}));
+  g.appendChild(lab);
+  g.appendChild(txt(L.t, {x:L.gx, y:L.gy-L.gr-16, class:"cname g-mid", "font-size":"19"}));
+  gSea.appendChild(g);
+});
+
+/* bonds: an outer stroke with a bright filament through it */
+var roadEls = [];
+gRoad.setAttribute("filter", "url(#bloom)");
+E.forEach(function(e){
+  var a = byId[e.a], b = byId[e.b]; if(!a||!b) return;
+  var g = el("g", {class:"rg"});
+  var dx=b.gx-a.gx, dy=b.gy-a.gy, len=Math.sqrt(dx*dx+dy*dy)||1, bow=Math.min(120, len*0.16);
+  var mx=(a.gx+b.gx)/2-(dy/len)*bow, my=(a.gy+b.gy)/2+(dx/len)*bow;
+  var d = "M"+a.gx+" "+a.gy+" Q"+mx+" "+my+" "+b.gx+" "+b.gy;
+  g.appendChild(el("path", {d:d, class:"road"+(e.cf==="inferred"?" inf":"")+(a.l!==b.l?" far":"")}));
+  if(e.cf !== "inferred") g.appendChild(el("path", {d:d, class:"bondcore"}));
+  g.appendChild(txt(e.t, {x:(a.gx+2*mx+b.gx)/4, y:(a.gy+2*my+b.gy)/4-6, class:"rlbl g-near"}));
+  gRoad.appendChild(g);
+  roadEls.push({e:e, g:g});
+});
+
+/* atoms: halo, body, specular highlight */
+var cityEls = {};
+C.forEach(function(c){
+  var orph = DEG[c.id]===0, r = 6 + Math.min(DEG[c.id],10)*1.7;
+  var g = el("g", {class:"city g-mid"+(orph?" isorph":"")});
+  g.appendChild(el("circle", {cx:c.gx, cy:c.gy, r:r*2.5, class:"halo", fill:OWN[c.o].c}));
+  if(orph) g.appendChild(el("circle", {cx:c.gx, cy:c.gy, r:r+7, class:"oring"}));
+  g.appendChild(el("circle", {cx:c.gx, cy:c.gy, r:r, class:"pin", fill:OWN[c.o].c}));
+  g.appendChild(el("circle", {cx:c.gx-r*0.33, cy:c.gy-r*0.36, r:Math.max(1.4, r*0.26), class:"spec"}));
+  g.appendChild(txt(c.n, {x:c.gx, y:c.gy+r+16, class:"g-near"}));
+  g.addEventListener("click", function(ev){ ev.stopPropagation(); select(c.id); });
+  gCity.appendChild(g);
+  cityEls[c.id] = g;
+});
+
+var z2 = 0.4, tx2 = 0, ty2 = 0, fitZ2 = 0.4;
+function vp2(){ var r = svg2.getBoundingClientRect(); return {w:r.width, h:r.height}; }
+function apply2(){
+  root2.setAttribute("transform", "translate("+tx2+","+ty2+") scale("+z2+")");
+  var lod = z2 <= fitZ2*1.03 ? "far" : (z2 < fitZ2*2.3 ? "mid" : "near");
+  svg2.setAttribute("data-lod", lod);
+  document.getElementById("lvl").textContent =
+    (lod==="far" ? "Continents" : lod==="mid" ? "Cities" : "Cities & roads")+"  ·  "+Math.round(z2*100)+"%";
+}
+function fit2(){
+  var v = vp2(); if(!v.w) return;
+  fitZ2 = z2 = Math.min(v.w/(GW+120), v.h/(GH+90));
+  tx2 = (v.w-GW*z2)/2; ty2 = (v.h-GH*z2)/2; apply2();
+}
+function zoomAt2(f, px, py){
+  var nz = Math.max(0.12, Math.min(3.2, z2*f));
+  tx2 = px-(px-tx2)*(nz/z2); ty2 = py-(py-ty2)*(nz/z2); z2 = nz; apply2();
+}
+/* same idea in the atlas: don't leave cities hidden behind the continent view */
+function ensureCitiesVisible(){
+  if(curView !== "globe") return;
+  var target = fitZ2 * 1.6;
+  if(z2 < target){ var v = vp2(); zoomAt2(target/z2, v.w/2, v.h/2); }
+}
+function flyTo2(L){
+  var v = vp2(), nz = Math.max(fitZ2*2.5, Math.min(2.2, Math.min(v.w,v.h)/(L.gr*2.7)));
+  var sx=tx2, sy=ty2, sz=z2, ex=v.w/2-L.gx*nz, ey=v.h/2-L.gy*nz, t0=performance.now();
+  (function step(t){
+    var k=Math.min(1,(t-t0)/430), e=k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    z2=sz+(nz-sz)*e; tx2=sx+(ex-sx)*e; ty2=sy+(ey-sy)*e; apply2();
+    if(k<1) requestAnimationFrame(step);
+  })(t0);
+}
+svg2.addEventListener("wheel", function(ev){
+  ev.preventDefault(); var r=svg2.getBoundingClientRect();
+  zoomAt2(ev.deltaY<0?1.13:1/1.13, ev.clientX-r.left, ev.clientY-r.top);
+}, {passive:false});
+var dg2=false, lx2=0, ly2=0, mv2=0;
+svg2.addEventListener("pointerdown", function(ev){ dg2=true; mv2=0; lx2=ev.clientX; ly2=ev.clientY; svg2.classList.add("drag"); svg2.setPointerCapture(ev.pointerId); });
+svg2.addEventListener("pointermove", function(ev){
+  if(!dg2) return; var dx=ev.clientX-lx2, dy=ev.clientY-ly2;
+  mv2+=Math.abs(dx)+Math.abs(dy); tx2+=dx; ty2+=dy; lx2=ev.clientX; ly2=ev.clientY; apply2();
+});
+svg2.addEventListener("pointerup", function(ev){ dg2=false; svg2.classList.remove("drag"); if(mv2<4 && ev.target===svg2) deselect(); });
+svg2.addEventListener("pointercancel", function(){ dg2=false; svg2.classList.remove("drag"); });
+
+var orphBtn = document.getElementById("gorph");
+orphBtn.onclick = function(){
+  var on = orphBtn.getAttribute("aria-pressed") !== "true";
+  orphBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  svg2.classList.toggle("orph", on);
+};
+
+/* ---------- view switching ---------- */
+var boardEl = document.getElementById("board");
+var stageEl = document.getElementById("stage"), stage2El = document.getElementById("stage2");
+function setView(v){
+  curView = v;
+  Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-view")===v ? "true" : "false");
+  });
+  document.body.classList.toggle("boardview", v==="board");
+  document.body.classList.toggle("globeview", v==="globe");
+  stageEl.hidden = (v!=="map");
+  stage2El.hidden = (v!=="globe");
+  boardEl.classList.toggle("on", v==="board");
+  if(v==="board"){ if(!boardEl.innerHTML) renderBoard(); gapsEl.classList.remove("open"); }
+  if(v==="globe"){ fit2(); }
+  if(v==="map"){ apply(); }
+}
+Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function(b){
+  b.onclick = function(){ setView(b.getAttribute("data-view")); };
+});
+
+/* ---- boot ---- */
+window.addEventListener("resize", function(){
+  if(curView === "globe"){ fit2(); return; }
+  if(z <= FITMAX) fit(); else apply();
+});
+fit();
+})();
+</script>
+</body>
+</html>
