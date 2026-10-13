@@ -42,7 +42,7 @@ A component belongs on the map only if it's shared across multiple products or o
 
 ## Open issues / known gaps — carry these forward
 
-- **LLMHub ownership gap** — the model access layer for everything AI-driven in the estate. No owning team established. A repo name (`terraform-electron-llmhub-infra`) hints at the platform side but is not an owner and shouldn't be treated as one. Flagged as the most consequential gap on the map — a single point of dependency nobody has named as accountable.
+- **LLMHub operator follow-up** — the model access layer for AI components in the estate. The operating team is not yet recorded in this register; this is incomplete research, not evidence of missing ownership. A repo name (`terraform-electron-llmhub-infra`) hints at the platform side but does not identify the operator.
 - **Franklin / Web Builder contested ownership** — can't be resolved independently of the coupled-vs-headless platform model question. Don't force a resolution without that being settled first.
 - **Review & approval layer gap** — Veeva PromoMats and GCMA are absent from Luca's email grouping but present in his own architecture document. They belong on the map.
 - **Layer vocabulary mismatch** — Luca's email and his architecture document use different layer names for the same things. The map should reconcile this explicitly rather than silently pick one.
@@ -57,9 +57,27 @@ A component belongs on the map only if it's shared across multiple products or o
 - VaxAssist is "Own the Experience"
 - AMP → LLMHub edge confirmed (not inferred): LLMHub is the model access layer for every AI component that needs an LLM
 
+## Discussion clarifications applied to the register
+
+- **GCMA, AEM Assets (Adobe DAM), Brightcove** — Dilawar confirmed that none currently integrates with Franklin or Web Builder. Removed the inferred GCMA-to-Franklin, GCMA-to-Web-Builder and Adobe-DAM-to-Franklin edges. All six absent pairings are documented in the affected component details; do not infer live integrations from the architecture's conceptual lifecycle flow. Other recorded relationships remain unchanged.
+- **Pfizer Web / PfizerWeb** — an assembler and authoring layer, deliberately not a content store. Kept in **Author & Assemble** and made this boundary explicit in its description and notes. The specific design-export target remains inferred.
+- **Gap interpretation** — removed Evidence gap cards. An operator not yet recorded is a research follow-up, not an ownerless service. Components without recorded integrations reflect the current mapping snapshot; conversations with relevant people are still needed to fill it in.
+- **Hosting transition** — many sites and applications are switching to Spark Pro; migration is work in progress. Hosting multiplicity and Edison Lite's recorded connection count are not, by themselves, evidence of unmanaged duplication or critical concentration.
+- **Authentication audiences** — GRV is for HCPs; GPA is for patients. Removed the blanket authentication-overlap finding. GCP's specific scope remains to be captured, without assuming it duplicates either service.
+
 ## For v2 in Cursor — suggested first moves
 
-1. Pull `ecosystem-infrastructure-map.html` out of the source chat and into the new project folder as-is, unmodified, as your baseline.
-2. Split the embedded `C` and `E` arrays out into `data/register.json` — that's the actual asset here, not the HTML shell.
-3. Keep a build step that can still emit a single self-contained HTML file, since that's the format Luca and any non-technical reviewer expect. Don't let v2 tooling make the shareable output harder to open.
-4. If Kozhin, Filippos, or Reid start editing the register directly, that's the point where git history and a schema (even a lightweight JSON schema) start paying for themselves.
+1. ~~Pull `ecosystem-infrastructure-map.html` out of the source chat and into the new project folder as-is, unmodified, as your baseline.~~ Done — was the v0.1 baseline commit.
+2. ~~Split the embedded `C` and `E` arrays out into `data/register.json`~~ Done — `data/register.json` (`{components, edges}`) is the register now.
+3. If Kozhin, Filippos, or Reid start editing the register directly, that's the point where git history and a schema (even a lightweight JSON schema) start paying for themselves.
+
+## v2 architecture (superseded the single-file plan above)
+
+The single-file HTML output was retired once the map moved onto **Spark Pro** (Pfizer's internal app platform — templated stacks, git-push builds, per-branch previews, SSO, deploy to Cloudflare Workers) instead of being shared as a file over Teams/SharePoint. This was one of the triggers named back in "Why v1 skipped a repo": auth was the one that fired.
+
+- **Next.js (App Router)** + **`@opennextjs/cloudflare`** — Spark Pro's own Cloudflare Workers stacks deploy via OpenNext (see the `sparkpro` component's edges in the register), so the app targets what the platform already runs rather than a generic static export.
+- `app/EcosystemMap.jsx` is a "lift and shift" of the original vanilla-JS render engine (SVG map, Atlas, Estate board) into a single client component — ported close to verbatim, not rewritten against React state, since the pan/zoom/level-of-detail logic has no React-shaped equivalent worth the rewrite risk.
+- `data/register.json` is imported directly at build time (no more string-injection build step).
+- SSO is assumed to be handled at the Spark Pro platform/edge layer, not in application code — unconfirmed against Spark Pro's actual onboarding docs (see below).
+
+**Not yet confirmed against Spark Pro itself**: the app was built against `https://app.pro.spark.pfizer/#/`'s onboarding conventions as inferred from this project's own register notes (SSO-gated, so it couldn't be inspected directly during this work). Before this ships, someone with Spark Pro access needs to confirm the worker name convention, whether the self-reference service binding / R2 incremental cache in the standard OpenNext scaffold are expected even for a fully static app, and whether SSO really is edge-level with no app-side code required.

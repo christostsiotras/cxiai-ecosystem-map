@@ -1,0 +1,816 @@
+{
+  "components": [
+    {
+      "id": "workfront",
+      "n": "Workfront",
+      "l": "manage",
+      "o": "consume",
+      "op": "Adobe (vendor)",
+      "cf": "confirmed",
+      "d": "Work and project management for content requests and delivery.",
+      "src": "MCP Application Register, Confluence IS space. Listed vendor, likely Adobe connector adopt."
+    },
+    {
+      "id": "eshub",
+      "n": "Engineering Services Hub",
+      "l": "manage",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Front door for OSS engineering requests. Team directory and request form.",
+      "src": "Confluence: CX+AI Eng Team Getting Started, external links to engineering.captain.digitalpfizer.com."
+    },
+    {
+      "id": "amp",
+      "n": "AMP",
+      "l": "manage",
+      "o": "own",
+      "op": "Syed Ali's team (OSS)",
+      "cf": "confirmed",
+      "d": "In-house AI platform over the marketing content workflow. Reads only Pfizer-controlled storage; connects out to Adobe Workfront and Lexicon.",
+      "src": "Confluence AMPM space: AMP Data Sources, Onboarding to the AMP team. Jira AMPM-1717 on Workfront event ingestion for AMP's own notification engine. Operator lead (unconfirmed): Syed Ali's team. Reclassified on Luca's feedback, 25 Sep.",
+      "note": "Not Accelerated Mobile Pages. AMP here is a Pfizer-built AI platform with its own space, team and Jira project. It also connects to Lexicon, which is not yet on this map. Our integration point to it, if any, is still unestablished."
+    },
+    {
+      "id": "adobedam",
+      "n": "AEM Assets (Adobe DAM)",
+      "l": "assets",
+      "o": "shared",
+      "op": "Adobe (vendor)",
+      "cf": "inferred",
+      "d": "Digital asset repository. Approved images, documents and brand files.",
+      "src": "Luca's spec. Appears as AEM Assets in the Content Platform Architecture asset layer. Luca 25 Sep: shared, possibly own and operate. To confirm with Syed. Dilawar's discussion clarification: no current integration with Franklin or Web Builder.",
+      "note": "AEM Assets does not currently integrate with Franklin or Web Builder. The architecture's asset-to-authoring flow is not evidence of a live integration, so no such edges are drawn."
+    },
+    {
+      "id": "veeva",
+      "n": "Veeva Vault",
+      "l": "assets",
+      "o": "shared",
+      "op": "Veeva (vendor)",
+      "cf": "confirmed",
+      "d": "Regulated content and asset store. Also the source for PromoMats review.",
+      "src": "MCP Application Register (vendor, adopt or wrap). Asset layer of the architecture. Luca 25 Sep: shared, possibly own and operate. To confirm with Syed."
+    },
+    {
+      "id": "webfiles",
+      "n": "Webfiles",
+      "l": "assets",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Internal file store serving web properties.",
+      "src": "MCP Application Register lists Web Files as internal. Listed in the OSS Toolkit documentation. Part of the OSS Toolkit (spaces.pfizer/stratus-v2/projects/oss-internal/applications/oss-toolkit), hosted at oss-webkit.digitalpfizer.com. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "video",
+      "n": "Video Manager",
+      "l": "assets",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Video upload, metadata, permissions and expiry. Pushes files to the streaming platform.",
+      "src": "Confluence OCT and VID spaces: admin functions, API endpoints, E2E test overview, general information. Part of the OSS Toolkit (spaces.pfizer/stratus-v2/projects/oss-internal/applications/oss-toolkit), hosted at oss-webkit.digitalpfizer.com. Confirmed by Christos 25 Sep.",
+      "note": "Luca's spec calls this Video. It is Video Manager, and it is ours, not an unidentified content component."
+    },
+    {
+      "id": "brightcove",
+      "n": "Brightcove",
+      "l": "assets",
+      "o": "own",
+      "op": "OSS (team to confirm)",
+      "cf": "confirmed",
+      "d": "Video streaming and encoding platform behind Video Manager.",
+      "src": "Confluence: Video Uploading (files pass from Video Manager to the streaming platform); OSS support route covers Brightcove and Video Manager issues together. Reclassified on Luca's feedback, 25 Sep. Dilawar's discussion clarification: no current integration with Franklin or Web Builder.",
+      "note": "Brightcove does not currently integrate with Franklin or Web Builder. Its recorded integration with Video Manager remains separate from those missing authoring integrations."
+    },
+    {
+      "id": "intman",
+      "n": "Interactive Manager",
+      "l": "assets",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Interactive content assembly and management.",
+      "src": "Luca's spec and the MCP Application Register (internal). cxi-ai.pfizer.com states interactive calculators and estimators are typically embedded within PfizerPro, which gives this component a delivery target. Part of the OSS Toolkit (spaces.pfizer/stratus-v2/projects/oss-internal/applications/oss-toolkit), hosted at oss-webkit.digitalpfizer.com. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "franklin",
+      "n": "Adobe Franklin",
+      "l": "author",
+      "o": "contested",
+      "op": "Operational ownership in transition",
+      "cf": "confirmed",
+      "d": "Document-authored CMS with Edge Delivery. Authors publish from a Word document.",
+      "src": "Luca's spec names it contested. Confluence: Adobe Franklin (EBGS), Franklin Blocks (FRA). OSS Engineering lists three Adobe Franklin SMEs (Naresh, Juan, Vaibhav), scoped to budget assessment, vendor training and performance reports rather than operations. Dilawar's discussion clarification: no current integration with GCMA, AEM Assets or Brightcove.",
+      "note": "Coupled model only. The Content Platform Architecture lists it interchangeably with AEM Sites and Drupal as an example, not as a characterisation. It also lists Adobe Edge Delivery separately in its delivery row, but Franklin IS Edge Delivery Services; its own options matrix says so. Nothing at Pfizer refers to Edge Delivery as a distinct system, so it is not a separate component here. GCMA, AEM Assets and Brightcove do not currently integrate with Franklin; conceptual lifecycle flows must not be drawn as live integrations."
+    },
+    {
+      "id": "webbuilder",
+      "n": "Web Builder",
+      "l": "author",
+      "o": "contested",
+      "op": "Operational ownership in transition",
+      "cf": "confirmed",
+      "d": "Canvas-based site builder. Deploys into Edison Lite.",
+      "src": "Luca's spec names it contested. Confluence: Web Builder Documentation (FRA), test scope pages. OSS Engineering holds a named Web Builder SME (Juan), currently working on Nanosites. Dilawar's discussion clarification: no current integration with GCMA, AEM Assets or Brightcove.",
+      "note": "The architecture writes Edison Lite Web Builder as a single unit. Splitting authoring from hosting is our argument, not a documented position. GCMA, AEM Assets and Brightcove do not currently integrate with Web Builder; conceptual lifecycle flows must not be drawn as live integrations."
+    },
+    {
+      "id": "vev",
+      "n": "Vev",
+      "l": "author",
+      "o": "own",
+      "op": "OSS (team to confirm)",
+      "cf": "confirmed",
+      "d": "Visual web design and build tool used for campaign pages.",
+      "src": "Confluence: Vev integration page (MCY space) with named vendor contacts. Reclassified on Luca's feedback, 25 Sep."
+    },
+    {
+      "id": "pfizerweb",
+      "n": "PfizerWeb",
+      "l": "author",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Assembler and authoring layer: turns a brief into a site design from approved components for export to the build platform. Deliberately not a content store.",
+      "src": "cxi-ai.pfizer.com: AI Studio project, 198 components onboarded, MVP live with real Pfizer sites running through it. Discussion clarification: Pfizer Web is the assembler or authoring layer, deliberately not a content store.",
+      "note": "Pfizer Web belongs in Author & Assemble, not Assets & Media. Its role is to assemble site designs and enforce the design system, not to store content or replace an asset repository. The specific export target remains inferred."
+    },
+    {
+      "id": "webformbuilder",
+      "n": "Webform Builder",
+      "l": "author",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Drag-and-drop form builder. Vue.js and Laravel, forms embedded into sites.",
+      "src": "Confluence: Webform Builder Architecture (WBU) and Service Page. Hosted on Stratus, AWS stack, webforms.pfizer. Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "edisonlite",
+      "n": "Edison Lite",
+      "l": "deliver",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Hosting for content-led sites. Canvas and NPM framework routes.",
+      "src": "Confluence: Edison Home (EDN), Edison Lite site types in DMP (DMSP). Christos's discussion clarification: many sites and applications are switching to Spark Pro; migration is in progress.",
+      "note": "Ownership is clean. What is contested is the seam with Web Builder, not this platform. Many sites and applications are switching to Spark Pro. Recorded connections are a work-in-progress snapshot, not a measure of criticality or the final hosting estate."
+    },
+    {
+      "id": "edisoncustom",
+      "n": "Edison Custom",
+      "l": "deliver",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Decoupled Drupal 9 hosting on AWS for larger custom sites.",
+      "src": "Confluence: Platform Comparison (IU space), NextGen PMI launch procedure. OSS Engineering holds the Edison Custom SME doing feature development and maintenance (Reda), but building features on a platform is not operating it. Classified as consume: Digital runs it, we build on it. Luca 25 Sep."
+    },
+    {
+      "id": "edisonlegacy",
+      "n": "Edison Legacy",
+      "l": "deliver",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "st": "legacy",
+      "d": "Drupal 7 on Acquia. Legacy estate, migration target.",
+      "src": "Confluence: NextGen PMI Launch Procedure lists the three Edison instance types."
+    },
+    {
+      "id": "sparkpro",
+      "n": "Spark Pro",
+      "l": "deliver",
+      "o": "consume",
+      "op": "Stratus platform team",
+      "cf": "confirmed",
+      "d": "Application platform. Templated stacks, builds, per-branch previews, SSO, deploy to Cloudflare Workers.",
+      "src": "Spark Pro architecture doc. Confluence: SOP for Stratus Hub Platform Access, CX+AI Eng onboarding. Christos's discussion clarification: many sites and applications are switching to Spark Pro; migration is in progress.",
+      "note": "Formerly Stratus Hub / FitKit. Ownership is not ambiguous: the Stratus team runs it, we consume it. Appears only in the headless model. Migration to Spark Pro is in progress; individual migration routes are not yet fully recorded."
+    },
+    {
+      "id": "pfisr",
+      "n": "Pfi.SR",
+      "l": "engage",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Short URL service. Redirects to content elsewhere; hosts nothing itself. Multi-domain, group-managed links, V-Card content types.",
+      "src": "Confluence LPS space: multi-domain FRD v1.0, groups feature enablement, S3 backup process. Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "pfa",
+      "n": "PfizerForAll",
+      "l": "engage",
+      "o": "experience",
+      "op": "Pfizer (owner TBC)",
+      "cf": "confirmed",
+      "d": "Consumer-facing destination. Runs on Edison Lite.",
+      "src": "Confluence: PfizerForAll - Edison Lite (PSO space), go-live Aug 2024, and PfizerForAll - Adobe Franklin (PSO space).",
+      "note": "Runs on two platforms at once. pfizerforallcom sits on Edison Lite, pfizerforallcomus on Adobe Franklin, with separate Edison Dashboard entries. The same brand spans both sides of the coupled/headless split."
+    },
+    {
+      "id": "pfizerpro",
+      "n": "PfizerPro",
+      "l": "engage",
+      "o": "experience",
+      "op": "Pfizer (owner TBC)",
+      "cf": "inferred",
+      "d": "HCP-facing portal.",
+      "src": "Luca's spec. Named as a served surface in the architecture and in the MCP UI POC page."
+    },
+    {
+      "id": "brandcom",
+      "n": "Brand.com",
+      "l": "engage",
+      "o": "experience",
+      "op": "Pfizer (owner TBC)",
+      "cf": "inferred",
+      "d": "Brand website estate.",
+      "src": "Luca's spec and the served-surfaces caption in the architecture."
+    },
+    {
+      "id": "vaxassist",
+      "n": "Vaxassist",
+      "l": "engage",
+      "o": "shared",
+      "op": "Pfizer (platform TBC)",
+      "cf": "confirmed",
+      "d": "Vaccination support surface. We own what ships on it.",
+      "src": "Luca's spec email. Confirmed by Christos 25 Sep. Reclassified on Luca's feedback, 25 Sep."
+    },
+    {
+      "id": "socialportal",
+      "n": "Social Media Portal",
+      "l": "engage",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Social channel publishing and management surface.",
+      "src": "Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "eventsmgr",
+      "n": "Events Manager",
+      "l": "engage",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Event and webinar management surface.",
+      "src": "Listed in the OSS Toolkit documentation (OCT space). The toolkit is a modular Laravel application with shared components. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "adobeanalytics",
+      "n": "Adobe Analytics",
+      "l": "measure",
+      "o": "own",
+      "op": "OSS (team to confirm)",
+      "cf": "confirmed",
+      "d": "Web analytics and reporting across the property estate.",
+      "src": "Confluence: Adobe Analytics Dashboard (APCRRC space). Reclassified on Luca's feedback, 25 Sep."
+    },
+    {
+      "id": "websdk",
+      "n": "Adobe WebSDK",
+      "l": "measure",
+      "o": "own",
+      "op": "OSS (team to confirm)",
+      "cf": "confirmed",
+      "d": "Client-side collection layer feeding Adobe Analytics.",
+      "src": "Confluence: Adobe WebSDK Implementation Guidelines (DAS space). Reclassified on Luca's feedback, 25 Sep."
+    },
+    {
+      "id": "smartcapture",
+      "n": "SmartCapture",
+      "l": "review",
+      "o": "consume",
+      "op": "Not yet recorded in this register",
+      "cf": "confirmed",
+      "d": "Pfizer's site capture service. Records page state to evidence and support MLR review.",
+      "src": "Confluence OAP space: Adobe Franklin Requirements states all Franklin sites must be compatible and integrated with SmartCapture as the standard to aid MLR reviews and record keeping. Adobe Franklin Integration notes Franklin must trigger it on publish via Sidekick."
+    },
+    {
+      "id": "promomats",
+      "n": "GCMA (Veeva PromoMats)",
+      "l": "review",
+      "o": "shared",
+      "op": "Josh Levy, product manager",
+      "cf": "confirmed",
+      "d": "Medical, legal and regulatory review and approval. Nothing goes out unapproved.",
+      "src": "Content Platform Architecture, review and approval node. GCMA is the Pfizer name for Veeva PromoMats; Josh Levy is the product manager. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, possibly own and operate. To confirm with Syed. Dilawar's discussion clarification: no current integration with Franklin or Web Builder.",
+      "note": "The Content Platform Architecture lists GCMA and Veeva PromoMats as two separate systems in the review node. They are one system under two names, so there is a single review route here, not a choice of two. GCMA does not currently integrate with Franklin or Web Builder. Its review role does not imply an automated approval integration with either authoring platform."
+    },
+    {
+      "id": "forge",
+      "n": "Forge",
+      "l": "design",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Design system. Reference implementation for the MCP design descriptor work.",
+      "src": "MCP Builder Platform page, R&R table. Owner named."
+    },
+    {
+      "id": "zenith",
+      "n": "Zenith",
+      "l": "design",
+      "o": "shared",
+      "op": "CXI+AI (components) + Judy's org (design system)",
+      "cf": "confirmed",
+      "d": "Design system. Named by the team as its own reusable platform tooling.",
+      "src": "cxi-ai.pfizer.com carries Zenith Design System Buildout as a CXI+AI AI Studio project, and lists Zenith alongside PfizerWeb as its platform and tooling. MCP Builder Platform page names Forge, Zenith, Axiom. Luca 25 Sep: someone in Judy's org owns the design system, we own the components."
+    },
+    {
+      "id": "axiom",
+      "n": "Axiom",
+      "l": "design",
+      "o": "shared",
+      "op": "Dilawar (OSS, development) + Heather, Cozi team (US Commercial, design system)",
+      "cf": "confirmed",
+      "d": "Design system built for Adobe Franklin and not currently portable off it. Development and design-system ownership sit in different organisations.",
+      "src": "Spark Pro architecture doc states Axiom is Franklin-built and not considered portable. Filippos Tsakiridis appears against Forge, Zenith and Axiom in the MCP Builder R&R table, but that row is scoped to design systems as consuming systems for MCP work, not to owning Axiom. Development sits with Dilawar in OSS; the design system itself is owned by Heather in Cozi team, US Commercial. Confirmed by Christos 25 Sep. Luca 25 Sep: same split as Zenith, we own the components.",
+      "note": "Three-way split worth naming: Heather (US Commercial) owns the design system, Dilawar (OSS) owns development, and it is technically hard-coupled to Adobe Franklin, which is contested. Any headless application goes without it or rebuilds it. So the Franklin question is not only about a publishing tool, and settling it needs two organisations in the room."
+    },
+    {
+      "id": "grv",
+      "n": "GRV",
+      "l": "identity",
+      "o": "shared",
+      "op": "Chris Luther (OSS, Sule's team); PO Alejandro Otero",
+      "cf": "confirmed",
+      "d": "Identity and access for healthcare professionals (HCPs). GRV5 is the current generation.",
+      "src": "Confluence: GRV5 Integrating with Vanilla Edison Lite (RP space). Chris Luther runs the identity and access services from within OSS; Alejandro Otero is PO for GRV, GCP and GPA projects. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, we run parts of it. Christos's discussion clarification: GRV is for HCPs; GPA is for patients.",
+      "note": "Sits inside OSS but outside CXI+AI, so it is a consume rather than an own. Different from the infrastructure band, which sits in Pfizer Digital."
+    },
+    {
+      "id": "gcp",
+      "n": "GCP",
+      "l": "identity",
+      "o": "shared",
+      "op": "Chris Luther (OSS, Sule's team); PO Alejandro Otero",
+      "cf": "confirmed",
+      "d": "Authentication service. Its specific scope is not yet recorded in this register.",
+      "src": "Luca's spec email. Chris Luther runs the identity and access services from within OSS; Alejandro Otero is PO for GRV, GCP and GPA projects. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, we run parts of it.",
+      "note": "GRV serves HCPs and GPA serves patients, so they are not competing authentication routes for the same audience. GCP's specific scope still needs to be captured through follow-up with the service owner or PO."
+    },
+    {
+      "id": "gpa",
+      "n": "GPA",
+      "l": "identity",
+      "o": "shared",
+      "op": "Chris Luther (OSS, Sule's team); PO Alejandro Otero",
+      "cf": "confirmed",
+      "d": "Authentication service for patients, distinct from GRV's HCP audience.",
+      "src": "Luca's spec email. Chris Luther runs the identity and access services from within OSS; Alejandro Otero is PO for GRV, GCP and GPA projects. Confirmed by Christos 25 Sep. Luca 25 Sep: shared, we run parts of it. Christos's discussion clarification: GPA is for patients; GRV is for HCPs."
+    },
+    {
+      "id": "dmp",
+      "n": "DMP",
+      "l": "provision",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Site and property provisioning. Controls allowed site types and frameworks.",
+      "src": "Confluence: DMS-3342 Site Type Restriction for Edison Lite Sites in DMP. MCP register: internal, no API. OSS Engineering has a dedicated DMP SME doing DMP development (Syed). Classified as owned on that basis, confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "reqmgr",
+      "n": "Request Manager / PDRM",
+      "l": "provision",
+      "o": "consume",
+      "op": "GSO automation team",
+      "cf": "confirmed",
+      "d": "Self-service access request and revoke forms across platforms.",
+      "src": "Jira TRON-24243 moves Request service ownership to GSO automation. TRON access-form tickets."
+    },
+    {
+      "id": "spaces",
+      "n": "Spaces",
+      "l": "provision",
+      "o": "consume",
+      "op": "Not yet recorded in this register",
+      "cf": "inferred",
+      "d": "Platform portal for site and stack lifecycle. Replaces Edison Dashboard in this layer.",
+      "src": "Named by Luca 25 Sep as the replacement for Edison Dashboard. spaces.pfizer appears as the host for Stratus project paths in the OSS Toolkit and Spark Pro documentation. Owner and exact scope still to confirm.",
+      "note": "Added on Luca's instruction. I have not verified what Spaces covers beyond the Stratus paths, so scope and operator are both open."
+    },
+    {
+      "id": "bench",
+      "n": "Bench / Stack",
+      "l": "provision",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Spark Pro provisioning surface. Per-branch preview environments.",
+      "src": "Spark Pro doc (stack--branch.app.bench.pfizer). T&C Scanner page links stack.bench.pfizer."
+    },
+    {
+      "id": "cloudflare",
+      "n": "Cloudflare",
+      "l": "infra",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Edge network, WAF and Workers runtime. Both Edison sites and Spark Pro stacks terminate here.",
+      "src": "Spark Pro doc (Workers via OpenNext). Jira TRON Cloudflare/CFA tickets for Edison.",
+      "note": "Highest-concentration dependency in the estate. Two otherwise separate routes converge on it."
+    },
+    {
+      "id": "aws",
+      "n": "AWS",
+      "l": "infra",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Compute and storage underpinning Edison Custom and platform services.",
+      "src": "Confluence: Platform Comparison (Edison Custom on Amazon). Jira STRT CloudWatch tickets."
+    },
+    {
+      "id": "dns",
+      "n": "DNS",
+      "l": "infra",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Domain and cutover management.",
+      "src": "Confluence: NextGen PMI Launch Procedure references DNS cutover tickets. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "biblio",
+      "n": "Biblio",
+      "l": "infra",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Search and event backbone for the web estate. OpenSearch driver plus an event bus.",
+      "src": "Jira SPC-3639 connects Franklin search to the Biblio OpenSearch driver; TRON-19122 uses the Biblio EventBus; TRON-37501 grants Biblio API access to Bench Stack Workers; TRON-18671 compares DMP against Biblio.",
+      "note": "Operator inferred from the TRON platform project rather than stated outright."
+    },
+    {
+      "id": "llmhub",
+      "n": "LLMHub",
+      "l": "infra",
+      "o": "consume",
+      "op": "Not yet recorded in this register",
+      "cf": "confirmed",
+      "d": "Single governed API to approved LLM providers (Vox GenAI, Bedrock) with one auth model. Formerly SlimLLM.",
+      "src": "Confluence PI1 space: LLMHub architecture overview. Jira TRON-29299 and TRON-29879. Repo terraform-electron-llmhub-infra.",
+      "note": "The model access layer for every AI component that needs an LLM. The operating team has not yet been recorded in this register; that is a research follow-up, not evidence that the service has no owner. The terraform-electron-llmhub-infra repo suggests the platform side, but a repo name does not identify the operator. Model-access role confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "github",
+      "n": "GitHub / CI",
+      "l": "infra",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "Source control and build pipelines. Git-push deployment for Spark Pro stacks.",
+      "src": "Spark Pro doc. Jira TRON GitHub org and billing tickets."
+    },
+    {
+      "id": "mcpbuilder",
+      "n": "MCP Builder Platform",
+      "l": "mcp",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Governed MCP foundation and standards for OSS applications.",
+      "src": "Confluence: MCP Builder Platform (IS space). Owner Christos Tsiotras."
+    },
+    {
+      "id": "c4weekly",
+      "n": "C4 Weekly",
+      "l": "mcp",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Reporting tool with a live MCP server. The existing end-to-end proof.",
+      "src": "MCP Application Register: already running, see case study."
+    },
+    {
+      "id": "compass",
+      "n": "Compass Suite",
+      "l": "mcp",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Agentic submission and build platform.",
+      "src": "MCP Application Register (internal)."
+    },
+    {
+      "id": "osshub",
+      "n": "Beacon",
+      "l": "mcp",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Front door for OSS services. MCP connection candidate.",
+      "src": "MCP Application Register lists it as OSS Hub, its former name. Rebranded to Beacon. Confirmed by Christos 25 Sep."
+    },
+    {
+      "id": "launchpad",
+      "n": "Launchpad",
+      "l": "mcp",
+      "o": "consume",
+      "op": "Mike Lamb's team (Pfizer Digital)",
+      "cf": "confirmed",
+      "d": "MCP connection candidate. No longer an OSS-owned component.",
+      "src": "MCP Application Register lists it as internal with the owner column blank, which predates the move. Transferred to Mike Lamb's team. Confirmed by Christos 25 Sep.",
+      "note": "Ownership moved out of OSS. If it stays on the MCP candidate list, the retrofit ask for it now has to go through Digital rather than being ours to schedule."
+    },
+    {
+      "id": "kirby",
+      "n": "Kirby",
+      "l": "mcp",
+      "o": "own",
+      "op": "CXI+AI / OSS&AI",
+      "cf": "confirmed",
+      "d": "Built and managed in house. MCP connection candidate, API work in progress.",
+      "src": "MCP Application Register (internal, existing API WIP). Confirmed by Christos 25 Sep."
+    }
+  ],
+  "edges": [
+    {
+      "a": "webbuilder",
+      "b": "edisonlite",
+      "t": "deploys into",
+      "cf": "confirmed",
+      "why": "Web Builder test scope covers integration with Edison Lite. DMP exposes a combined Edison Lite – Web Builder site type."
+    },
+    {
+      "a": "sparkpro",
+      "b": "cloudflare",
+      "t": "runs on",
+      "cf": "confirmed",
+      "why": "Spark Pro stacks deploy as Cloudflare Workers via OpenNext."
+    },
+    {
+      "a": "edisonlite",
+      "b": "cloudflare",
+      "t": "served through",
+      "cf": "confirmed",
+      "why": "Edison site guard and CFA configuration handled in Cloudflare."
+    },
+    {
+      "a": "edisoncustom",
+      "b": "aws",
+      "t": "hosted on",
+      "cf": "confirmed",
+      "why": "Edison Custom is decoupled Drupal 9 on Amazon."
+    },
+    {
+      "a": "dmp",
+      "b": "edisonlite",
+      "t": "provisions",
+      "cf": "confirmed",
+      "why": "DMS-3342 restricts allowed Edison Lite site types and frameworks in DMP."
+    },
+    {
+      "a": "reqmgr",
+      "b": "webbuilder",
+      "t": "grants access to",
+      "cf": "confirmed",
+      "why": "TRON tickets for the Web Builder access and revoke forms."
+    },
+    {
+      "a": "reqmgr",
+      "b": "franklin",
+      "t": "grants access to",
+      "cf": "confirmed",
+      "why": "TRON-14225 Adobe Franklin user access management via self-service."
+    },
+    {
+      "a": "grv",
+      "b": "edisonlite",
+      "t": "authenticates",
+      "cf": "confirmed",
+      "why": "GRV5 integration supported on Canvas Web Builder plus Edison Lite."
+    },
+    {
+      "a": "grv",
+      "b": "webbuilder",
+      "t": "authenticates",
+      "cf": "confirmed",
+      "why": "Same GRV5 integration page."
+    },
+    {
+      "a": "webformbuilder",
+      "b": "sparkpro",
+      "t": "hosted on",
+      "cf": "confirmed",
+      "why": "Webform Builder Architecture: project hosted on the Stratus platform, built on the AWS stack."
+    },
+    {
+      "a": "pfisr",
+      "b": "aws",
+      "t": "stores in",
+      "cf": "confirmed",
+      "why": "PFI.SR S3 bucket backup process documented in the LPS space."
+    },
+    {
+      "a": "pfisr",
+      "b": "edisonlite",
+      "t": "redirects to",
+      "cf": "inferred",
+      "why": "Multi-domain short URL FRD is scoped to Edison. It points at Edison-hosted pages rather than serving them. Exact coupling not verified."
+    },
+    {
+      "a": "video",
+      "b": "brightcove",
+      "t": "streams through",
+      "cf": "confirmed",
+      "why": "Video Manager uploads the file then sends it to the streaming platform for processing."
+    },
+    {
+      "a": "video",
+      "b": "osshub",
+      "t": "API integration",
+      "cf": "confirmed",
+      "why": "Confluence: API integration Video Manager and OSS HUB, video-manager/api/oss-hub endpoint."
+    },
+    {
+      "a": "video",
+      "b": "aws",
+      "t": "stores in",
+      "cf": "confirmed",
+      "why": "Dedicated S3 bucket and IAM role recorded in General Information - Video Manager."
+    },
+    {
+      "a": "intman",
+      "b": "pfizerpro",
+      "t": "embeds into",
+      "cf": "confirmed",
+      "why": "Site states interactive calculators and estimators are typically embedded within PfizerPro."
+    },
+    {
+      "a": "pfizerweb",
+      "b": "webbuilder",
+      "t": "exports designs to",
+      "cf": "inferred",
+      "why": "Site states designs export straight to the platform developers build on. The specific target platform is not named."
+    },
+    {
+      "a": "mcpbuilder",
+      "b": "forge",
+      "t": "consumes",
+      "cf": "confirmed",
+      "why": "Forge is the reference design system the MCP Builder Platform builds against. Confirmed by Christos 25 Sep."
+    },
+    {
+      "a": "pfizerweb",
+      "b": "llmhub",
+      "t": "calls models via",
+      "cf": "confirmed",
+      "why": "Christos 25 Sep: LLMHub is the model access layer for every AI component that needs an LLM to function. PfizerWeb's AI assembles designs from approved components."
+    },
+    {
+      "a": "compass",
+      "b": "llmhub",
+      "t": "calls models via",
+      "cf": "confirmed",
+      "why": "Christos 25 Sep: LLMHub is the model access layer for every AI component that needs an LLM to function. Compass Suite is an agentic platform."
+    },
+    {
+      "a": "amp",
+      "b": "llmhub",
+      "t": "calls models via",
+      "cf": "confirmed",
+      "why": "Christos 25 Sep: LLMHub is the model access layer for every AI component that needs an LLM to function."
+    },
+    {
+      "a": "franklin",
+      "b": "smartcapture",
+      "t": "triggers on publish",
+      "cf": "confirmed",
+      "why": "Adobe Franklin Integration: Franklin must support triggering services such as SmartCapture on publish via Sidekick."
+    },
+    {
+      "a": "smartcapture",
+      "b": "promomats",
+      "t": "evidences for",
+      "cf": "inferred",
+      "why": "SmartCapture is required as the standard to aid MLR reviews and record keeping. The handoff into the review system is not documented."
+    },
+    {
+      "a": "franklin",
+      "b": "biblio",
+      "t": "search powered by",
+      "cf": "confirmed",
+      "why": "Jira SPC-3639: connect Franklin search to the new Biblio OpenSearch driver."
+    },
+    {
+      "a": "bench",
+      "b": "biblio",
+      "t": "API access to",
+      "cf": "confirmed",
+      "why": "TRON-37501 requests per-application Biblio credentials for Bench Stack example Workers."
+    },
+    {
+      "a": "bench",
+      "b": "llmhub",
+      "t": "provisions access to",
+      "cf": "confirmed",
+      "why": "Christos 25 Sep. Bench Stack provisions the access path to LLMHub for the applications built on it."
+    },
+    {
+      "a": "dmp",
+      "b": "biblio",
+      "t": "reconciled against",
+      "cf": "inferred",
+      "why": "TRON-18671 compares DMP against Biblio for a web discrepancy report, implying overlapping records of the estate."
+    },
+    {
+      "a": "axiom",
+      "b": "franklin",
+      "t": "built for",
+      "cf": "confirmed",
+      "why": "Spark Pro doc: Axiom is built for Adobe Franklin and not considered portable."
+    },
+    {
+      "a": "pfa",
+      "b": "franklin",
+      "t": "also runs on",
+      "cf": "confirmed",
+      "why": "Confluence: PfizerForAll - Adobe Franklin, Edison Dashboard entry websites/adobe/pfizerforallcomus."
+    },
+    {
+      "a": "pfa",
+      "b": "edisonlite",
+      "t": "runs on",
+      "cf": "confirmed",
+      "why": "PfizerForAll - Edison Lite, live since Aug 2024."
+    },
+    {
+      "a": "websdk",
+      "b": "adobeanalytics",
+      "t": "feeds",
+      "cf": "confirmed",
+      "why": "Adobe WebSDK Implementation Guidelines."
+    },
+    {
+      "a": "bench",
+      "b": "sparkpro",
+      "t": "provisions",
+      "cf": "confirmed",
+      "why": "Per-branch preview environments at stack--branch.app.bench.pfizer."
+    },
+    {
+      "a": "spaces",
+      "b": "edisonlite",
+      "t": "manages",
+      "cf": "confirmed",
+      "why": "Edison Dashboard site records for Lite properties."
+    },
+    {
+      "a": "github",
+      "b": "sparkpro",
+      "t": "triggers build",
+      "cf": "confirmed",
+      "why": "Git-push deployment model."
+    },
+    {
+      "a": "veeva",
+      "b": "promomats",
+      "t": "source for",
+      "cf": "inferred",
+      "why": "PromoMats is a Vault application. Exact boundary not verified here."
+    },
+    {
+      "a": "workfront",
+      "b": "amp",
+      "t": "sends events to",
+      "cf": "confirmed",
+      "why": "AMPM-1717 confirms Workfront can send AMP a real-time webhook, which AMP builds its notification engine on."
+    },
+    {
+      "a": "workfront",
+      "b": "franklin",
+      "t": "briefs work into",
+      "cf": "inferred",
+      "why": "Management layer precedes authoring in Luca's lifecycle. Wiring unverified."
+    },
+    {
+      "a": "pfizerpro",
+      "b": "edisonlite",
+      "t": "runs on",
+      "cf": "inferred",
+      "why": "Assumed from the Edison estate. Not verified."
+    },
+    {
+      "a": "brandcom",
+      "b": "edisonlite",
+      "t": "runs on",
+      "cf": "inferred",
+      "why": "Assumed from the Edison estate. Not verified."
+    },
+    {
+      "a": "vev",
+      "b": "edisonlite",
+      "t": "publishes to",
+      "cf": "inferred",
+      "why": "Vev integration page references an Edison Lite backup website. Direction unverified."
+    }
+  ]
+}
